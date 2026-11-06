@@ -1,0 +1,107 @@
+(module
+  easyeda2kicad:IND-SMD_L2.5-W2.0_AHP252010X
+  (layer
+  F.Cu)
+
+  (tedit
+  5DC5F6A4)
+
+  (descr
+  "1.0uH ±20%")
+
+  (attr
+  smd)
+
+  (fp_text
+  reference
+  REF**
+  (at 0.000 -4.000)
+  (layer F.SilkS)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  value
+  IND-SMD_L2.5-W2.0_AHP252010X
+  (at 0.000 4.000)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  user
+  %R
+  (at 0 0)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (property
+  "LCSC Part"
+  "C66001")
+
+  (fp_line
+  (start -0.27 -1.22)
+  (end 0.27 -1.22)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start -0.27 1.22)
+  (end 0.27 1.22)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (pad
+  1
+  smd
+  rect
+  (at -0.95 0.00 0.00)
+  (size 1.000 2.400)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  2
+  smd
+  rect
+  (at 0.95 0.00 0.00)
+  (size 1.000 2.400)
+  (layers F.Cu F.Paste F.Mask))
+
+  (fp_circle
+  (center -1.25 1.00)
+  (end -1.22 1.00)
+  (layer F.SilkS)
+  (width 0.06))
+
+  (model
+  "${KIPRJMOD}/lcsc.3dshapes/IND-SMD_L2.5-W2.0-H1.2_AHP252010X.step"
+  (offset (xyz 0.000 0.000 0.000))
+  (scale (xyz 1 1 1))
+  (rotate (xyz 0 0 270)))
+
+  (fp_line
+  (start -1.55 -1.3)
+  (end 1.55 -1.3)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "82c30455-e3f5-5820-93e0-964818e75d1b"))
+
+  (fp_line
+  (start 1.55 -1.3)
+  (end 1.55 1.3)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "9931fbdb-9370-51ec-b617-031dcefdbb14"))
+
+  (fp_line
+  (start 1.55 1.3)
+  (end -1.55 1.3)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "0145ea30-5fd8-5547-8840-76b93e0c118a"))
+
+  (fp_line
+  (start -1.55 1.3)
+  (end -1.55 -1.3)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "c2ac050f-a5c2-55b1-93b9-19561630f6de"))
+)

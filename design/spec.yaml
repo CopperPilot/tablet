@@ -1,0 +1,706 @@
+schema_version: rea-hardware/spec/v1
+product:
+  slug: compact-tablet
+  name: Compact 8.4-inch Android Tablet
+  summary: "8.4-inch 1600x2560 dual-DSI Android tablet with RK3566 SoC, 4 GB LPDDR4X, 64 GB eMMC 5.1, RK817 PMIC, CNC aluminium back shell, dual cameras, stereo speakers, and USB-C daughterboard"
+  category: tablet
+inputs:
+  images: [inputs/front_back.jpg, inputs/rear_side.jpg, inputs/teardown.jpg]
+  views:
+    front: inputs/front_back.jpg
+    rear: inputs/rear_side.jpg
+  prompt: inputs/prompt.md
+envelope:
+  width_mm: 134.0
+  height_mm: 198.0
+  depth_mm: 9.4
+  corner_radius_mm: 14.0
+  derivation: "User specification: 134 x 198 x 9.4 mm (scaled from 132.6 x 195.3 mm reference to fit 3.2 mm thick Sharp LQ084R1SX01 8.4-inch display stackup; 10.4 mm thick at 1.0 mm proud rear camera ring)"
+  front_origin_world_mm: [-103.0, 22.0, 6.6]
+fidelity:
+  out_of_scope:
+    - magnetic stylus charging strip on side wall
+    - cellular 5G baseband and SIM tray
+    - fingerprint sensor inside top power button
+    - rear brand logo
+  dimensions:
+    - {name: overall_width, kind: overall_width, value_mm: 134.0, tol_mm: 1.0, source: "prompt specification and rear_side.jpg"}
+    - {name: overall_height, kind: overall_height, value_mm: 198.0, tol_mm: 1.0, source: "prompt specification and rear_side.jpg"}
+    - {name: overall_depth, kind: overall_depth, value_mm: 9.4, tol_mm: 1.0, source: "prompt specification: 9.4 mm body, 10.4 mm at camera bump"}
+    - {name: corner_radius, kind: corner_radius, value_mm: 14.0, tol_mm: 1.0, source: "prompt specification: 14 mm plan-view corner radius"}
+    - {name: center_thickness, kind: center_thickness, value_mm: 9.4, tol_mm: 0.5, source: "prompt layer stackup: 1.1 + 3.2 + 0.3 + 3.8 + 1.0 = 9.4 mm"}
+    - {name: edge_thickness, kind: edge_thickness, value_mm: 9.0, tol_mm: 1.0, source: "flat CNC aluminium back shell with rounded perimeter edges"}
+    - {name: side_bezel, kind: bezel, value_mm: 10.5, tol_mm: 1.5, source: "(134.0 - 113.04) / 2 = 10.48 mm side bezel around LQ084R1SX01 active area"}
+  must_match:
+    - id: F_DISPLAY
+      name: 8.4-inch 1600x2560 display active window
+      kind: display
+      view: front
+      center_mm: [67.0, 99.0]
+      size_mm: [113.04, 180.86]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "Sharp LQ084R1SX01 active area 113.04 x 180.864 mm under full-face cover glass"
+    - id: F_FRONT_CAM
+      name: Front MIPI-CSI camera window
+      kind: sensor
+      view: front
+      center_mm: [67.0, 5.2]
+      size_mm: [3.0, 3.0]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "Centred in top front bezel"
+    - id: F_REAR_CAM
+      name: Rear camera raised lens ring
+      kind: sensor
+      view: rear
+      center_mm: [14.8, 14.8]
+      size_mm: [13.5, 13.5]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "13.5 mm OD raised ring, 1.0 mm proud of back shell (10.4 mm total thickness at bump)"
+    - id: F_REAR_MIC
+      name: Rear microphone acoustic pinhole
+      kind: sensor
+      view: rear
+      center_mm: [14.8, 24.6]
+      size_mm: [1.0, 1.0]
+      implement: pcb+case
+      source: photo
+      confidence: high
+      notes: "1.0 mm diameter hole on rear camera centreline, backed by MEMS mic MK1 on mainboard"
+    - id: F_REAR_FLASH
+      name: Rear LED flash diffuser window
+      kind: led
+      view: rear
+      center_mm: [14.8, 33.0]
+      size_mm: [5.6, 5.6]
+      implement: pcb+case
+      source: photo
+      confidence: high
+      notes: "5.6 mm diameter window on rear camera centreline, backed by flash LED D1 on mainboard"
+    - id: F_USBC
+      name: Bottom USB-C receptacle opening
+      kind: port
+      view: bottom
+      center_mm: [67.0, 4.7]
+      size_mm: [9.2, 3.5]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "Centred on bottom edge wall, backed by J1 on usbc_board"
+    - id: F_BTN_PWR
+      name: Top power button
+      kind: button
+      view: top
+      center_mm: [109.8, 4.7]
+      size_mm: [12.0, 2.8]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "Top edge power button near corner above camera, actuating button_flex"
+    - id: F_BTN_VOL_UP
+      name: Volume up button
+      kind: button
+      view: top
+      center_mm: [32.0, 4.7]
+      size_mm: [10.0, 2.8]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "Top edge volume-up button actuating button_flex"
+    - id: F_BTN_VOL_DN
+      name: Volume down button
+      kind: button
+      view: top
+      center_mm: [19.8, 4.7]
+      size_mm: [10.0, 2.8]
+      implement: case
+      source: photo
+      confidence: high
+      notes: "Top edge volume-down button actuating button_flex"
+fab:
+  profile: jlcpcb
+  layers: 8
+  thickness_mm: 0.8
+  assembly_sides: [top, bottom]
+electrical:
+  mcu: "Rockchip RK3566 quad-core Cortex-A55 SoC (LCSC C2943786, BGA-565 15.5x14.4mm)"
+  power: "1S 3.8V 5600mAh (21.28Wh) Li-Po battery pack via 3-pin connector + USB-C 5V/3A sink (5.1k CC pull-downs on daughterboard) -> RK817-5 PMIC (charger, fuel gauge, 5 bucks, 9 LDOs, audio codec) + RK860-0 (TCS4525-class) external VDD_CPU buck + TPS61165DRVR WLED backlight boost + AW3641EDNR flash LED boost"
+  blocks:
+    - id: compute
+      purpose: "Rockchip RK3566 SoC, 4 GB LPDDR4X x32 (within 15 mm of SoC), 64 GB eMMC 5.1 (153-ball), 24 MHz crystal, solder-down RF shield frame"
+      key_parts: [RK3566, K4FBE3D4HM-MGCJ, FEMDNN064G-C9A61, KH-PBJ-440808]
+      reference: "https://github.com/PuntoMaximo/VonVisionAI_hardware (Hardware/Board.kicad_sch) and Rockchip RK3566 Hardware Design Guide v1.1"
+    - id: power_pmic
+      purpose: "RK817-5 integrated PMIC (SoC rails, switching Li-Ion charger, fuel gauge, audio codec), RK860-0 (TCS4525-class) dedicated VDD_CPU buck, 3-pin battery connector (V+, NTC, GND), PMIC shield frame"
+      key_parts: [RK817-5, RK860-0, DF58-4P-1.2V(21)]
+      reference: "Rockchip RK3566 Reference Schematic (RK817 + TCS4525 power tree)"
+    - id: display_touch_backlight
+      purpose: "Dual-channel 4-lane MIPI-DSI (DSI0 + DSI1) 40-pin FPC connector to Sharp LQ084R1SX01, TPS61165DRVR WLED boost backlight driver with PWM dimming, 10-pin touch FPC with MPR121QR2 I2C touch controller (I2C + INT + RST)"
+      key_parts: [FPC-0.5HF-40PWBH10, TPS61165DRVR, 0.5K-QX-10PWB, MPR121QR2]
+      reference: "Sharp LQ101R1SX01 / LQ084R1SX01 dual-DSI interface specification"
+    - id: cameras_flash_mic
+      purpose: "Rear 30-pin MIPI-CSI camera FPC connector, front 24-pin MIPI-CSI camera FPC connector, AW3641EDNR flash LED driver + rear KT-0603W flash LED, rear MSM261DCB002 MEMS microphone"
+      key_parts: [0.5K-QX-30PWB, FPC-0.5HF-24PWBH10, AW3641EDNR, KT-0603W, MSM261DCB002]
+      reference: "https://github.com/PuntoMaximo/VonVisionAI_hardware (MIPI-CSI & audio sections)"
+    - id: wifi_bt_rf
+      purpose: "RTL8723DS-CG SDIO Wi-Fi + UART Bluetooth combo IC with 50-ohm feed to ANT3216A063R2400A chip antenna aligned with top-edge plastic RF window"
+      key_parts: [RTL8723DS-CG, ANT3216A063R2400A]
+      reference: "Rockchip RK3566 SDIO Wi-Fi/BT reference design"
+    - id: audio_io_subboards
+      purpose: "NS4150B Class-D speaker amplifier + RK817-5 internal Class-D speaker driver for top/bottom landscape stereo speakers, 16-pin FPC link to USB-C daughterboard (USB 2.0 OTG D+/D-, CC1/CC2, VBUS), 4-pin FPC link to button flex board, UART/Maskrom/rail test pads"
+      key_parts: [NS4150B, 0.5K-QX-16PWB, 0.5K-QX-4PWB, TYPE-C-31-M-12, USBLC6-2P6, B3U-3000P]
+      reference: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.6 USB 2.0 OTG & Boot/Maskrom"
+  nets_must_connect:
+    - ["U1.USB_OTG0_DP", "J6.1"]
+    - ["U1.USB_OTG0_DM", "J6.2"]
+    - ["U3.SW", "L1.1"]
+    - ["U6.SW", "L7.1"]
+  high_speed:
+    - name: lpddr4x_byte0_ch_a
+      kind: length_match
+      nets: ["LPDDR4_DQ0_A", "LPDDR4_DQ1_A", "LPDDR4_DQ2_A", "LPDDR4_DQ3_A", "LPDDR4_DQ4_A", "LPDDR4_DQ5_A", "LPDDR4_DQ6_A", "LPDDR4_DQ7_A", "LPDDR4_DM0_A", "LPDDR4_DQS0P_A", "LPDDR4_DQS0N_A"]
+      tolerance_mm: 2.5
+      impedance_ohm: 40.0
+      diff_impedance_ohm: 80.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.3 LPDDR4X Byte Lane Routing (L3)"
+    - name: lpddr4x_byte1_ch_a
+      kind: length_match
+      nets: ["LPDDR4_DQ8_A", "LPDDR4_DQ9_A", "LPDDR4_DQ10_A", "LPDDR4_DQ11_A", "LPDDR4_DQ12_A", "LPDDR4_DQ13_A", "LPDDR4_DQ14_A", "LPDDR4_DQ15_A", "LPDDR4_DM1_A", "LPDDR4_DQS1P_A", "LPDDR4_DQS1N_A"]
+      tolerance_mm: 2.5
+      impedance_ohm: 40.0
+      diff_impedance_ohm: 80.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.3 LPDDR4X Byte Lane Routing (L3)"
+    - name: lpddr4x_byte2_ch_b
+      kind: length_match
+      nets: ["LPDDR4_DQ0_B", "LPDDR4_DQ1_B", "LPDDR4_DQ2_B", "LPDDR4_DQ3_B", "LPDDR4_DQ4_B", "LPDDR4_DQ5_B", "LPDDR4_DQ6_B", "LPDDR4_DQ7_B", "LPDDR4_DM0_B", "LPDDR4_DQS0P_B", "LPDDR4_DQS0N_B"]
+      tolerance_mm: 2.5
+      impedance_ohm: 40.0
+      diff_impedance_ohm: 80.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.3 LPDDR4X Byte Lane Routing (L3)"
+    - name: lpddr4x_byte3_ch_b
+      kind: length_match
+      nets: ["LPDDR4_DQ8_B", "LPDDR4_DQ9_B", "LPDDR4_DQ10_B", "LPDDR4_DQ11_B", "LPDDR4_DQ12_B", "LPDDR4_DQ13_B", "LPDDR4_DQ14_B", "LPDDR4_DQ15_B", "LPDDR4_DM1_B", "LPDDR4_DQS1P_B", "LPDDR4_DQS1N_B"]
+      tolerance_mm: 2.5
+      impedance_ohm: 40.0
+      diff_impedance_ohm: 80.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.3 LPDDR4X Byte Lane Routing (L3)"
+    - name: lpddr4x_ca_bus
+      kind: length_match
+      nets: ["LPDDR4_A0_A", "LPDDR4_A1_A", "LPDDR4_A2_A", "LPDDR4_A3_A", "LPDDR4_A4_A", "LPDDR4_A5_A", "LPDDR4_A0_B", "LPDDR4_A1_B", "LPDDR4_A2_B", "LPDDR4_A3_B", "LPDDR4_A4_B", "LPDDR4_A5_B", "LPDDR4_CKE0_A", "LPDDR4_CKE1_A", "LPDDR4_CKE0_B", "LPDDR4_CKE1_B", "LPDDR4_CS0N_A", "LPDDR4_CS1N_A", "LPDDR4_CS0N_B", "LPDDR4_CS1N_B", "LPDDR4_CLKP_A", "LPDDR4_CLKN_A", "LPDDR4_CLKP_B", "LPDDR4_CLKN_B"]
+      tolerance_mm: 3.0
+      impedance_ohm: 40.0
+      diff_impedance_ohm: 80.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.3 LPDDR4X Command/Address & Clock Routing (L6)"
+    - name: mipi_dsi0
+      kind: diff_pairs
+      nets: ["MIPI_DSI_TX0_D0P", "MIPI_DSI_TX0_D0N", "MIPI_DSI_TX0_D1P", "MIPI_DSI_TX0_D1N", "MIPI_DSI_TX0_D2P", "MIPI_DSI_TX0_D2N", "MIPI_DSI_TX0_D3P", "MIPI_DSI_TX0_D3N", "MIPI_DSI_TX0_CLKP", "MIPI_DSI_TX0_CLKN"]
+      tolerance_mm: 1.25
+      diff_impedance_ohm: 100.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.8 MIPI-DSI0 4-Lane Differential Routing (L6)"
+    - name: mipi_dsi1
+      kind: diff_pairs
+      nets: ["MIPI_DSI_TX1_D0P", "MIPI_DSI_TX1_D0N", "MIPI_DSI_TX1_D1P", "MIPI_DSI_TX1_D1N", "MIPI_DSI_TX1_D2P", "MIPI_DSI_TX1_D2N", "MIPI_DSI_TX1_D3P", "MIPI_DSI_TX1_D3N", "MIPI_DSI_TX1_CLKP", "MIPI_DSI_TX1_CLKN"]
+      tolerance_mm: 1.25
+      diff_impedance_ohm: 100.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.8 MIPI-DSI1 4-Lane Differential Routing (L6)"
+    - name: mipi_csi_cameras
+      kind: diff_pairs
+      nets: ["MIPI_CSI_RX_D0P", "MIPI_CSI_RX_D0N", "MIPI_CSI_RX_D1P", "MIPI_CSI_RX_D1N", "MIPI_CSI_RX_D2P", "MIPI_CSI_RX_D2N", "MIPI_CSI_RX_D3P", "MIPI_CSI_RX_D3N", "MIPI_CSI_RX_CLK0P", "MIPI_CSI_RX_CLK0N", "MIPI_CSI_RX_CLK1P", "MIPI_CSI_RX_CLK1N"]
+      tolerance_mm: 1.25
+      diff_impedance_ohm: 100.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.8 MIPI-CSI Dual Camera Differential Routing (L6)"
+    - name: usb2_otg
+      kind: diff_pairs
+      nets: ["USB_OTG0_DP", "USB_OTG0_DM"]
+      tolerance_mm: 1.5
+      diff_impedance_ohm: 90.0
+      source: "Rockchip RK3566 Hardware Design Guide v1.1 Section 3.6 USB 2.0 90-Ohm Differential Routing (L6)"
+board:
+  width_mm: 28.0
+  height_mm: 125.0
+  corner_radius_mm: 3.0
+  mounting_holes:
+    - {x_mm: 24.5, y_mm: 4.0, drill_mm: 1.5, plated: true}
+    - {x_mm: 3.5, y_mm: 6.0, drill_mm: 1.5, plated: true}
+    - {x_mm: 24.5, y_mm: 121.0, drill_mm: 1.5, plated: true}
+    - {x_mm: 3.5, y_mm: 118.0, drill_mm: 1.5, plated: true}
+  placement:
+    - {ref: ANT1, role: wifi_antenna, side: top, x_mm: 10.0, y_mm: 1.8, rot_deg: 0}
+    - {ref: U5, role: wifi_bt_ic, side: top, x_mm: 10.0, y_mm: 9.0, rot_deg: 0}
+    - {ref: MK1, role: rear_mic, side: bottom, x_mm: 16.2, y_mm: 2.6, rot_deg: 0, feature: F_REAR_MIC, tolerance_mm: 1.0}
+    - {ref: D1, role: rear_flash_led, side: bottom, x_mm: 16.2, y_mm: 11.0, rot_deg: 0, feature: F_REAR_FLASH, tolerance_mm: 1.0}
+    - {ref: U7, role: flash_driver, side: top, x_mm: 21.0, y_mm: 11.0, rot_deg: 0}
+    - {ref: J7, role: top_speaker_conn, side: top, x_mm: 2.2, y_mm: 11.0, rot_deg: 270}
+    - {ref: J3, role: rear_camera_fpc, side: top, x_mm: 2.2, y_mm: 24.0, rot_deg: 270}
+    - {ref: U2, role: lpddr4x_ram, side: top, x_mm: 17.5, y_mm: 28.0, rot_deg: 90}
+    - {ref: U1, role: rk3566_soc, side: top, x_mm: 17.5, y_mm: 41.5, rot_deg: 0}
+    - {ref: U3, role: emmc_storage, side: top, x_mm: 17.5, y_mm: 56.5, rot_deg: 0}
+    - {ref: J4, role: front_camera_fpc, side: top, x_mm: 2.2, y_mm: 44.0, rot_deg: 270}
+    - {ref: J1, role: display_dsi_fpc, side: top, x_mm: 2.2, y_mm: 68.0, rot_deg: 270}
+    - {ref: U6, role: backlight_driver, side: top, x_mm: 10.0, y_mm: 68.0, rot_deg: 0}
+    - {ref: J2, role: touch_fpc, side: top, x_mm: 2.2, y_mm: 88.0, rot_deg: 270}
+    - {ref: U9, role: touch_controller, side: top, x_mm: 9.0, y_mm: 88.0, rot_deg: 0}
+    - {ref: U8, role: cpu_buck, side: top, x_mm: 18.0, y_mm: 72.0, rot_deg: 0}
+    - {ref: U4, role: pmic, side: top, x_mm: 17.5, y_mm: 86.0, rot_deg: 0}
+    - {ref: U11, role: battery_charger, side: top, x_mm: 17.5, y_mm: 98.0, rot_deg: 0}
+    - {ref: J5, role: battery_conn, side: top, x_mm: 2.5, y_mm: 102.0, rot_deg: 270}
+    - {ref: U10, role: speaker_amp, side: top, x_mm: 16.0, y_mm: 112.0, rot_deg: 0}
+    - {ref: J8, role: button_fpc, side: top, x_mm: 2.2, y_mm: 114.0, rot_deg: 270}
+    - {ref: J6, role: usbc_fpc, side: top, x_mm: 10.5, y_mm: 122.8, rot_deg: 0}
+    - {ref: J9, role: bottom_speaker_conn, side: top, x_mm: 21.0, y_mm: 122.8, rot_deg: 0}
+  max_component_height_mm:
+    top: 1.2
+    bottom: 1.0
+sub_boards:
+  - id: usbc_board
+    name: USB-C daughter board
+    width_mm: 25.0
+    height_mm: 12.0
+    corner_radius_mm: 1.5
+    layers: 2
+    world_position_mm: [-48.5, -162.5, 0.0]
+    world_rotation_deg: [0.0, 0.0, 0.0]
+    mounting_holes:
+      - {x_mm: 2.5, y_mm: 6.0, drill_mm: 1.5, plated: true}
+      - {x_mm: 22.5, y_mm: 6.0, drill_mm: 1.5, plated: true}
+    placement:
+      - {ref: J1, role: usb_c_receptacle, side: top, x_mm: 12.5, y_mm: 8.4, rot_deg: 0, feature: F_USBC, tolerance_mm: 1.5}
+      - {ref: J2, role: mainboard_fpc, side: top, x_mm: 12.5, y_mm: 2.2, rot_deg: 180}
+      - {ref: U1, role: esd_protection, side: top, x_mm: 17.2, y_mm: 3.95, rot_deg: 0}
+    max_component_height_mm:
+      top: 3.5
+      bottom: 1.0
+bom:
+  - {refs: [U1], role: soc, mpn: RK3566, lcsc: C2943786, footprint: "lcsc:BGA-565_L15.5-W14.4-P0.40_RK3566_1", description: "Rockchip RK3566 quad-core Cortex-A55 SoC"}
+  - {refs: [U2], role: lpddr4x, mpn: K4FBE3D4HM-MGCJ, lcsc: C19188580, footprint: "lcsc:FBGA-200_L15.0-W10.0-BL_K4F6E3S4HM", description: "4 GB (32 Gbit) x32 LPDDR4X SDRAM, 200-ball FBGA"}
+  - {refs: [U3], role: emmc, mpn: FEMDNN064G-C9A61, lcsc: C49284704, footprint: "lcsc:BGA-153_L13.0-W11.5-P0.50-TL_FORESEE_FEMDME", description: "64 GB eMMC 5.1 NAND Flash, 153-ball FBGA (with 10 kOhm pull-up R51 C25744 on EMMC_D0 to VCC_1V8, 2.2 uF CL05A225MQ5NSNC C107369 C18 + 100 nF CL05B104KO5NNNC C1525 C75 on EMMC_VDDI within 1.3 mm of U3.C2, 10 kOhm pull-up R52 C25744 on U1.AF38 FLASH_VOL_SEL to VCC3V3_PMU strapping VCCIO2 for 1.8V signaling, 22 Ohm series damping resistor R25 C25092 on EMMC_CLK_SOC -> EMMC_CLK, and 0 Ohm jumper R26 C17168 to TP3 TP_MASKROM)"}
+  - {refs: [U4], role: pmic, mpn: RK809-5, lcsc: C2939628, footprint: "lcsc:QFN-68_L7.0-W7.0-P0.35-BL-EP5.5", description: "Rockchip RK817/RK809 family PMIC with BATDIV (Pin 56) fed from VBAT through 300 kOhm / 100 kOhm 1% resistive voltage divider R47 (0402WGF3003TCE LCSC C25774) and R48 (0402WGF1003TCE LCSC C25741) with 100 nF C72 (CL05B104KO5NNNC LCSC C1525) on PMIC_BATDIV (scaling 3.20-4.35V operating VBAT [with software/fuel-gauge low-battery cutoff threshold raised to >= 3.20V] to 0.80-1.0875V <= 1.20V ADC range and 1.98V abs max); VCC_RTC (Pin 45 on net VCC_RTC, decoupled by 1 uF C55 to GND) supplied from the highest always-present rail via cross-connected 95 mOhm 150 nA ideal-diode power multiplexers U25 and U26 (LM66100DCKR LCSC C2869734, U25 VIN=VSYS / ~CE=VCC3V3_SYS / VOUT=VCC_RTC and U26 VIN=VCC3V3_SYS / ~CE=VSYS / VOUT=VCC_RTC) so VCC_RTC is powered first from VSYS with <0.01 mV drop (<20 mV requirement) and remains at max(VSYS, VCC3V3_SYS) across the entire battery range; VCC5 (Pin 22, 1 uF C62, LDO1..3 input) and VCC9 (Pin 54, 10 uF C58, BUCK5 VCC_1V8 input and 3.0V UVLO) powered directly from VSYS (remaining >= 3.06V > 3.0V UVLO under 6W / 2A peak load transients at >= 3.20V cell cutoff); VCC6 (Pin 30, LDO4..6 input, decoupled locally by 1 uF C147 CL05A105KA5NQNC LCSC C52923 to GND) and VCC8 (Pin 57, SWOUT2 input, decoupled by 10 uF C5 CL10A106KP8NNNC LCSC C19702) powered from the Slot-1 regulated 3.67V buck-boost rail VCC3V3_SYS (providing 370mV nominal [>=238mV worst-case] hardware dropout headroom for LDO5 VCCA3V3_PHY, LDO6 VCC3V3_PMU, and downstream 3.30V LDOs U15/U21/U24, while dedicated 500 mA 1% ultra-low-dropout linear regulators U21, U24, and U15 TLV75533PDRVR LCSC C2861750 [lcsc:WSON-6_L2.0-W2.0-P0.65-TL-EP, V_DO <= 215 mV max at 500 mA] independently regulate gated VCC_3V3 for Wi-Fi/BT U5 + U18/U19 [<=450 mA peak, enabled by PMIC_SWOUT1 with 100k pull-down R80 and decoupled by 1 uF C151 C52923 + 4.7 uF C155 C19666 + 100 nF C17/C145/C146/C156], gated VCC3V3_EMMC for eMMC U3 VCC + RK3566 U1 VCCIO5/7 [<=300 mA peak, enabled by PMIC_SWOUT1 with 1 uF input cap C183 C52923, 1 uF output cap C184 C52923, 4.7 uF C153 C19666, 100 nF C154/C157 C1525, and test point TP41], and gated VCC3V3_LCD and gated VCC3V3_LCD [enabled by LCD_PWR_EN from U4.58 SWOUT2 VCC3V3_TP with 1 uF C37 input cap and 1 uF C38 output cap] to a tightly regulated 3.30V +/- 1% [3.267-3.333V, well within the 3.135-3.465V Sharp LQ084R1SX01 display limit and 3.00-3.60V RK3566/eMMC/Wi-Fi limits]) (generated across the full 3.20-4.35V 1S Li-Po operating battery discharge range by 2A synchronous buck-boost converter U12 TPS63802DLAR LCSC C2845237 enabled in Slot 1 prior to Slot 2 via U12.1 EN on PMIC_EXT_EN from U4.60 with 100 kOhm pull-down resistor R69 0402WGF1003TCE LCSC C25741 to GND, R39=63.4k 0402WGF6342TCE C38606 / R40=10k C25744 setting V_OUT = 0.500V*(1+63.4k/10k) = 3.670V nominal [3.571V..3.771V worst-case, providing >=238mV worst-case dropout headroom > 215mV max for U21/U24/U15], L10=0.47uH WPN201610HR47MT C97009, 10 uF C64 + 10 uF C182 on VSYS, and 22 uF C65 CL10A226MQ8NRNC C59461 on VCC3V3_SYS, while U13 TLV62569ADRLR LCSC C398367 is enabled on Pin 5 EN [BUCK_0V6_EN with 100 kOhm pull-down R73 C25741] via 1.80V VCC_1V8-powered level-translating buffer U17 SN74LV1T34DCKR LCSC C78541 [with 100 nF C144 C1525] gated by Slot-3 1.10V VCC_DDR on Pin 2 A, exceeding TLV62569A V_IH(EN)(min)=1.20V); BUCK1 (VDD_LOGIC, 54.5 uF total C2/C89/C90/C14/C91..C94 + 100R R53 || 1uF C76 on Pin 13 PMIC_FB1), BUCK2 (VDD_GPU, 54.5 uF total C3/C95/C96/C97..C101 + 100R R54 || 1uF C77 on Pin 8 PMIC_FB2), BUCK3 (VCC_DDR 1.10V, 77.6 uF total C4/C102..C104/C15/C105..C119, regulated via 1% 3:8 feedback divider R36 75k C25798 / R37 200k C25764 on Pin 27 PMIC_FB3), BUCK4 (Pin 65 SW4 -> L4 470nH -> PMIC_VBUCK4 -> 54.2 uF C63/C120..C123 + 100R R55 || 1uF C78 on Pin 64 PMIC_FB4, 0.9V OTP default supplying RK3566 VDD_NPU), and BUCK5 (VCC_1V8, 55.8 uF total C80/C81 2x22uF + C82 10uF at L5.2 + C9 1uF + C16/C35/C83..C88/C139 100nF, plus ferrite-filtered VCCA1V8_PMU via L17 BLM18PG121SN1D C14709 + 1 uF C140 C52923 + 100 nF C141 C1525 supplying U1 1.8V PLL/SARADC/USB/MULTI_PHY analog rails 1N18/1H4/1D16/1H16/1J3/1K17); SLEEP (Pin 49) driven via 10k/12k R43/R44 divider on PMIC_SLEEP; open-drain CLK32K (Pin 68, pulled up to VCC_1V8 via 10k R45) routed to single RK3566 32 kHz input ball U1.1T20 (GPIO0_B0_u in 1.8V PMUIO2 domain, with U1.A37 left unconnected to avoid opposing internal pulls); RK809-5 OTP-compliant LDO assignment (LDO1 Pin 23 OTP-OFF software-enabled 2.8V VCC_AF_2V8 with C39/C11; LDO2 Pin 21 Slot-1 0.9V VDDA_0V9 supplying U1 0.9V VDDA and U1.1P11 MIPI_DSI_TX0/LVDS_TX0_AVDD_0V9 with C40; LDO3 Pin 20 Slot-1 0.9V VDDA0V9_PMU with C41; LDO4 Pin 28 Slot-2 1.8V VCCA1V8_CODEC with C29; LDO5 Pin 29 Slot-4 VCCA3V3_PHY [~10 mA USB PHY load, 3.30V OTP default regulated with 220mV nominal (>=126mV worst-case) hardware dropout headroom from 3.52V VCC6/VCC3V3_SYS at cold boot and during USB Maskrom recovery, and reprogrammed over I2C0 to 3.00-3.10V for 420-520mV headroom across the entire battery range] with C36/C61; LDO6 Pin 31 Slot-2 VCC3V3_PMU [<2 mA PMUIO1 load, 3.30V OTP default regulated with 220mV nominal (>=126mV worst-case) hardware dropout headroom from 3.52V VCC6/VCC3V3_SYS at cold boot and during USB Maskrom recovery, and reprogrammed over I2C0 to 3.00-3.10V for 420-520mV headroom across the entire battery range] with C30/C56; LDO7 Pin 3 Slot-2 1.8V VCC1V8_CAM camera DOVDD with C31/C60 so DOVDD 1.8V ramps before AVDD/AF; LDO8 Pin 5 Slot-2 1.8V VCCA1V8_IMAGE supplying U1 1.8V MIPI-CSI/DSI/eDP/HDMI video PHY rails 1P9/1P12/1R10/1G17/1P13 with 1 uF C127 at U4.5 and 1 uF C142 + 100 nF C143 at U1; LDO9 Pin 6 OTP-OFF software-enabled 2.8V VCC_2V8 camera AVDD with C10); SWOUT1 on PMIC_SWOUT1 (1 uF C59); SWOUT2 2.1A switch on VCC3V3_TP (3.52V from Pin 57 VCC8, decoupled by 1 uF C37) feeding GPIO-gated 500 mA 3.30V 1% LDO regulator U15 (TLV75533PDRVR LCSC C2861750) for 3.30V VCC3V3_LCD (1 uF C38) while BUCK5 VCC_1V8 feeds GPIO-gated load switch U14 (TPS22919DCKR LCSC C2149796) for VCC1V8_LCD (both gated by U1.1T18 LCD_PWR_EN with 10k pull-down R57); stereo headphone DAC outputs Pin 39 (HPL_OUT on AUD_LINE_L) and Pin 41 (HPR_OUT on AUD_LINE_N) driving matched external Class-D amplifiers U23 and U10 (NS4150B LCSC C189961) for top speaker J7 and bottom speaker J9 (with internal mono Class-D outputs Pin 32/34 SPKP_OUT/SPKN_OUT left unconnected, and local VSYS bypass caps C170..C174/C177/C180/C181 at U4 VCC1..VCC4/VCC5/VCC7/VCC9/VCC_SPK_HP); VDC (Pin 61) and U1.T38 (USB_OTG0_VBUSDET) fed via 47k/30k 1% divider R34 (0402WGF4702TCE LCSC C25792) / R35 (0402WGF3002TCE LCSC C25776) + 100 nF C57 (ratio 0.3896: 1.95V at 5.0V VBUS and 2.63V at 6.75V max usbc_board:U2 OVP trip, strictly <= 3.30V operating max and < 3.63V abs max); accessible test points TP1..TP38 on UART2, Maskrom, GND, and all 34 power rails; 1 uF VREF cap C32; 1 uF charge-pump caps C33/C34; EXT_EN (Pin 60) driving Slot-1 enables U8.A2, U12.1, and 1.80V LPDDR4X VDD1 LDO U20.3 (TLV70018DCKR C133796, with 100k pull-downs R69 and R78 so VCC1V8_DDR VDD1 stabilizes in 100 us during Slot 1 ~3.9 ms before Slot-3 BUCK3 VCC_DDR VDD2); and differential Kelvin fuel-gauge sense across 10 mOhm R13 with Pin 62 (SNSP) connected to the battery negative side (BAT_SNSP at R13.1 / J5.3 / J5.4) and Pin 63 (SNSN) Kelvin-connected via 0 Ohm R67 (0402WGF0000TCE LCSC C17168 on BAT_SNSN) to the system ground side (R13.2 / GND)"}
+  - {refs: [U11], role: battery_charger, mpn: BQ25895RTWR, lcsc: C80200, footprint: "lcsc:QFN-24_L4.0-W4.0-P0.50-TL-EP2.7", description: "I2C 1S Li-Ion switching charger with D+/D- (Pins 2/3) left unconnected (defaulting input current limit to 500 mA USB500 at VBUS insertion until software reads USB_CC1/USB_CC2 on U1.1B18/1A19 SARADC_VIN2/3 attenuated via 10k shunt resistors R49/R50 C25744 to 1.02V max and isolated when VCC_1V8=0V by powered-off-protected CMOS switch U22 TMUX1511RSVR LCSC C2673275 [lcsc:UTQFN-16_L2.6-W1.8-P0.40-BL, true powered-off protection up to 3.6V recommended / 6.0V abs max at VDD=0V, with 100nF C152 C1525 and 100k pull-down R81 C25741 on VCC_1V8] ahead of 1 nF filter caps C73/C74 C1523 on USB_CC1_ADC/USB_CC2_ADC and updates IINLIM over I2C0 within the 9.0 W [1.81 A typ / 1.71 A min..1.96 A max at 5.0V VBUS] hardware input power ceiling enforced by R8=196 Ohm for the 2.4 W typ / 6.0 W peak tablet, strictly below usbc_board U2 I_OL(min) = 2.19 A and the 3.00 A 6-pin J6 FFC contact rating]), R8 196 Ohm 1% (0402WGF1960TCE LCSC C270631, setting hardware I_INMAX = 1.81 A typ [1.71 A min..1.96 A max, 9.05 W typ] strictly below the 2.19 A min usbc_board:U2 OCP trip threshold) on Pin 10 (ILIM) and dedicated 1 uF 25V local VBUS input decoupling capacitor C159 (CL05A105KA5NQNC LCSC C52923 placed at [14.55, 96.27] mm within 1.04 mm < 1.5 mm of U11.1 VBUS and tied to PGND Pins 17/18/25 via In1.Cu/F.Cu GND) with L8 WPN252012E1R0MT LCSC C370610 1.0 uH molded alloy inductor connected via wide F.Cu CHG_SW copper zone, 21 uF total VBAT capacitance (2x 10 uF C129/C130 C19702 + 1 uF C8 C52923) protected by resettable PTC fuse F1 (BSMD0603L-300 C5374008 on VBAT_CONN -> VBAT_PROT) + high-side -20V -10A 15 mOhm P-channel MOSFET reverse-polarity protection switch Q1 (PPM6N20V10 LCSC C918800, Drain Pins 1,2,5,6,7 on VBAT_PROT, Source Pins 4,8 on VBAT, Gate Pin 3 on VBAT_RPP_G pulled up to VBAT Source via 1 MOhm R66 0402WGF1004TCE C26083 so Q1 remains OFF with V_GS=0V during reverse polarity even while VBAT is energized, and pulled down to GND via 20V SOT-723 N-channel MOSFET Q2 RUM002N02T2L LCSC C250130 whose Gate VBAT_RPP_EN is driven from VBAT_PROT via 10:1 divider R70 100 kOhm 0402WGF1003TCE LCSC C25741 and R71 1 MOhm 0402WGF1004TCE LCSC C26083 to GND with reverse-polarity gate-clamp Schottky diode D49 BAS70L,315 LCSC C456141 [Anode on GND -> Cathode on VBAT_RPP_EN, clamping V(VBAT_RPP_EN) >= -0.3V and keeping Q2/Q1 strictly OFF with V_GS <= 0V during reverse battery faults V(VBAT_PROT) < -0.2V while turning Q2/Q1 fully ON with V_GS = 0.909*V(VBAT_PROT) = 1.82V..3.95V >= 1.2V across the entire 2.0-4.35V precharge and operating range at 8.02 uA total quiescent drain < 10 uA in ship mode], assisted by a charger-present 0V PCM wake path from U11.22 CHG_REGN [always-present 4.7-5.0V LDO when VBUS is attached] via Schottky diode D43 BAS70L,315 LCSC C456141 [Anode on CHG_REGN -> Cathode on VBAT_WAKE] and 100 kOhm R72 0402WGF1003TCE LCSC C25741 to VBAT_PROT [biasing an open 0V PCM-tripped pack to +4.125V on VBAT_PROT and +3.75V on VBAT_RPP_EN when V(VBAT_PROT) >= -0.2V so Q2/Q1 turn ON and U11 delivers full 128 mA precharge current without premature I_TERM charge termination, while limiting reverse-battery fault current to < 90 uA]) + 110A surge TVS D3 (TPTVS0571P C2844712 on VBAT), QON (Pin 12 on CHG_QON_L) and U4.52 PWRON (on PMIC_PWRON_L with 100nF debounce cap C132 C1525) OR-connected via ultra-low-leakage signal Schottky diodes D44 and D45 (BAS70L,315 C456141) to PWRON_L and protected by 100R series resistor R58 (C25076) + TVS D6 (PTVS5V5D1BLYL C553450) on PWRON_BTN_L, open-drain DSEL (Pin 24) left floating, isolated PMID (10 uF C26), 47 nF BTST cap C27 to CHG_SW, 4.7 uF REGN cap C28, REGN-to-BAT_NTC bias divider R9/R10 (5.1k/30k) with 100nF C131 + TVS D5, and separate STAT/INT pull-ups R11/R12"}
+  - {refs: [U8], role: cpu_buck, mpn: RK860-0, lcsc: C19188628, footprint: "lcsc:WLCSP-20_L2.0-W1.6-R5-C4-P0.40-TL", description: "TCS4525-compatible 6A I2C DVS buck converter for VDD_CPU (enabled by U4.60 PMIC_EXT_EN with 100 kOhm pull-down R69 C25741, VSEL Pin A1 driven by 1.80V level-shifted PMIC_SLEEP via R43/R44 divider, with 7A saturation inductor L6, 76.3 uF total output capacitance C1/C13/C50/C51/C124..C126, and 100 Ohm local feedback protection resistor R56 C25076 || 1 uF compensation cap C79 C52923 on Pin A4 VDD_CPU_FB)"}
+  - {refs: [U5], role: wifi_bt, mpn: RTL8723DS-CG, lcsc: C2762334, footprint: "lcsc:WQFN-48_L6.0-W6.0-P0.40-BL-EP4.2", description: "IEEE 802.11b/g/n SDIO Wi-Fi + Bluetooth 4.2 combo IC with dedicated local 24 MHz crystal Y3 (15 pF load caps C24/C25 C1548), WIFI_HOST_WAKE on Pin 20 (GPIO6 / DEV_WAKE_HOST_WL to U1.B34 GPIO2_B2_u), BT_HOST_WAKE on Pin 19 (TEST_MOD_SEL / GPIO14 / DEV_WAKE_HOST_BT to U1.D38 GPIO2_B1_u with 10 kOhm pull-down R82 0402WGF1002TCE LCSC C25744 to GND strapping TEST_MOD_SEL=0), Pin 18 (GPIO13 / HOST_WAKE_DEV on BT_WAKE_DEV) pulled down via 10 kOhm R83 (0402WGF1002TCE LCSC C25744) to GND, Pin 22 (SPS_LDO_SEL/GPIO1 on isolated net WIFI_SPS_LDO_SEL) dedicated to the power-on switching-buck strap via 10 kOhm pull-down resistor R42 (0402WGF1002TCE LCSC C25744) to GND so U5 uses its internal 32 kHz suspend oscillator and deterministically latches SPS_LDO_SEL=0 (internal switching regulator mode for L9) at ~WL_DIS / ~BT_DIS reset release without contention from CLK_32K (while 1.8V CLK_32K from U4.68 with 10k pull-up R45 drives only U1.1T20 GPIO0_B0_u, and unused U22 TMUX1511RSVR channels 2 and 4 Pins 4,5,6 and 13,14,15 are tied to GND), 2.2 uH buck inductor L9 + 4.7 uF/100 nF decoupling C46/C47 on WIFI_1V25, unused RF port Pin 48 (RFIO_BTG_S0) DC-blocked by 18 pF C66 and terminated by 49.9 Ohm R41, active RF port Pin 11 (RFIO_BTG_S1) matched via 18 pF C67 + pi-network (1.5 pF C68, 2.2 nH L11, 1.5 pF C69) to ANT1, 4-wire HCI UART (U5.25 UART_IN on BT_UART_TX, U5.27 UART_OUT on BT_UART_RX, U5.26 UART_CTS on BT_UART_CTS, and 3.3V VD33D-domain U5.44 GPIO8/UART_RTS on BT_UART_RTS_3V3 level-translated to 1.80V BT_UART_RTS at U1.G37 UART1_CTSn_M0 [1.8V VCCIO4] via 10 kOhm series R89 C25744 and 12 kOhm shunt R90 C25752 to GND), and 1.8V-to-3.3V level-translating buffers U18 and U19 (SN74LV1T34DCKR LCSC C78541 powered from 3.30V VCC_3V3 with 100 nF C145/C146 C1525 and 100 kOhm input/output pull-downs R74..R77 C25741) translating 1.8V SoC GPIOs WIFI_REG_ON (U1.A35) and BT_REG_ON (U1.B36) to 3.30V WIFI_WL_DIS_L (U5.4 ~WL_DIS/GPIO9) and BT_DIS_L (U5.43 ~BT_DIS/GPIO11) matching U5 VD33D=VCC_3V3 and exceeding V_IH(min)=2.0V"}
+  - {refs: [ANT1], role: antenna, mpn: ANT3216A063R2400A, lcsc: C412135, footprint: "lcsc:ANT-SMD_3P-L3.1-W1.6_ANT3216A063R2400A", description: "2.4 GHz low-profile 0.55 mm SMD ceramic chip antenna"}
+  - {refs: [U6], role: backlight_driver, mpn: TPS61165DRVR, lcsc: C122568, footprint: "lcsc:WSON-6_L2.0-W2.0-P0.65-TL-EP", description: "38V 1.2A WLED boost backlight driver with PWM dimming on Pin 5 (CTRL, pulled down to GND via 100 kOhm R68 0402WGF1003TCE LCSC C25741), 100 nF COMP capacitor C48, 3.3 Ohm current-sense resistor R6 for 60 mA output, 1 uF 50V output capacitor C19 (CL10A105KB8NNNC LCSC C15849) placed at (13.6, 65.4) mm immediately adjacent to rectifier D2.1 and U6.3 GND, and 36V bidirectional ESD TVS diode D14 (H36VND3B LCSC C20615816, V_RWM=36V, V_BR=45V > 40V max U6 OVP) at (5.6, 77.75) mm adjacent to J1.40"}
+  - {refs: [U7], role: flash_driver, mpn: AW3641EDNR, lcsc: C164096, footprint: "lcsc:WDFN-10_L3.0-W3.0-P0.50-BL-EP", description: "1A 1x/2x regulated charge-pump camera flash LED driver with local VSYS input decoupling 10 uF 10V 0603 C167 (CL10A106KP8NNNC LCSC C19702) + 100 nF 16V 0402 C176 (CL05B104KO5NNNC LCSC C1525) at Pin 1 (VIN), 1 uF 25V 0402 flying capacitor C12 (CL05A105KA5NQNC LCSC C52923) across Pins 2/3 (C1/C2), 4.7 uF 25V 0402 output capacitor C49 (GRM155R61E475ME15D LCSC C2858031) at Pin 10 (VOUT on FLASH_LED_A), 110 kOhm 1% 0402 RSET programming resistor R23 (0402WGF1103TCE LCSC C25745 on Pin 6 RSET to GND, within the AW3641E Table 4 56-150 kOhm range and setting V_FB(FLASH) = (1.26V / 110 kOhm) * 10.2 kOhm = 116.84 mV vs V_FB(TORCH) = 47 mV), and 0.22 Ohm (220 mOhm) 1% 0402 low-side current-sense resistor R24 (0402WGF220LTCE LCSC C270628 from D1.2 / U7.7 FB [FLASH_LED_K, where Pin 7 FB is a high-impedance voltage feedback input with I_FB = 1.9 uA typical bias current] to GND per AW3641E Figure 1/4/5 and Table 3, regulating I_FLASH = 116.84 mV / 0.22 Ohm = 531 mA [P_RSENSE = 62.05 mW <= 62.5 mW continuous / >125 mW pulse] and I_TORCH = 47 mV / 0.22 Ohm = 214 mA [P_RSENSE = 10.04 mW] into 1.0A camera flash LED D1 KW CELNM3.TK-S4S9-4L07M0-2686 LCSC C17383700)"}
+  - {refs: [D1], role: flash_led, mpn: KT-0603W, lcsc: C2290, footprint: "lcsc:LED0603-R-RD_WHITE", description: "Rear white camera flash LED (upgraded on board from 20 mA indicator KT-0603W to OSRAM KW CELNM3.TK-S4S9-4L07M0-2686 LCSC C17383700 on lcsc:LED-SMD_3P-L1.9-W1.5_KW-CELMM1.TG, OSLON Compact PL 1.9x1.5x0.72 mm ceramic high-power automotive/camera flash LED rated 1000 mA [1.0 A] continuous / up to 1.5 A pulse, V_F = 3.16 V typ @ 1A, Pin 1 Anode on FLASH_LED_A, Pin 2 Cathode on FLASH_LED_K, and Pin 3 electrically isolated thermal pad on GND with thermal via to internal ground planes, driven at 531 mA Flash / 214 mA Torch by U7 AW3641EDNR via R23=110k C25745 and R24=0.22R C270628)"}
+  - {refs: [D2], role: boost_diode, mpn: B5819WS, lcsc: C22624, footprint: "Diode_SMD:D_SOD-323", description: "Schottky rectifier for WLED boost converter (upgraded on main board to 60V 1A B16WS LCSC C364278 for 50% margin above TPS61165 38V/40V open-LED OVP; plus mainboard connector ESD/surge/reverse-polarity/OR-ing diodes D14 H36VND3B LCSC C20615816 36V standoff / 45V breakdown bidirectional ESD TVS on WLED_A at J1.40, D41..D45 BAS70L,315 LCSC C456141 ultra-low-leakage (I_R <= 100 nA max at 25 C) signal Schottky diodes (D41 and D42 OR-feeding U4.45 VCC_RTC from VSYS and VCC3V3_SYS, D43 from U11.22 CHG_REGN to VBAT_WAKE feeding 100k R72 C25741 to VBAT_PROT for charger-present 0V PCM battery wake, D44/D45 OR-connecting PWRON_L to U4.52 PMIC_PWRON_L and U11.12 CHG_QON_L, and D49 from GND [Anode] to VBAT_RPP_EN [Cathode] clamping Q2 gate >= -0.3V under reverse battery), D46 PESD5V0F1BL,315 LCSC C45961 ESD TVS on EMMC_MASKROM_TP, D3 TPTVS0571P LCSC C2844712 1.2kW/110A 5V surge TVS on VBAT, D13 SMF7.5A LCSC C123796 7.5V standoff / 8.33-9.21V breakdown (>6.75V max usbc_board:U2 OVP trip) / 12.9V max clamping (@ 15.5A 10/1000us, <14V operating / <22V abs max of U11 VBUS) unidirectional surge TVS on VBUS at J6, Q1 PPM6N20V10 LCSC C918800 -20V -10A 15 mOhm high-side P-channel MOSFET reverse-polarity protection switch on VBAT_PROT -> VBAT with 1 MOhm gate-to-source pull-up resistor R66 C26083 to VBAT and 20V SOT-723 N-channel MOSFET gate driver Q2 RUM002N02T2L LCSC C250130 [Gate on VBAT_RPP_EN via 100 kOhm R70 C25741 from VBAT_PROT, 1 MOhm R71 C26083 to GND, and reverse-polarity clamp Schottky D49 BAS70L,315 C456141 from GND, with D43 / 100 kOhm R72 C25741 charger-present 0V PCM wake from CHG_REGN to VBAT_PROT] downstream of F1 BSMD0603L-300 LCSC C5374008 3A/5A PTC fuse, D5..D8/D15/D17/D18/D29..D31/D35..D38 PTVS5V5D1BLYL LCSC C553450 35A TVS diodes, and D9..D12/D16/D19..D28/D32..D34/D39/D40/D47/D48 PESD5V0F1BL,315 LCSC C45961 0.4pF ultra-low-capacitance ESD TVS diodes across J1..J9 and TP1/TP2 [with D19..D21 on connector-side nets TP_I2C1_SCL/TP_I2C1_SDA/TP_COF_INT_L adjacent to J2.2/3/4 ahead of U16]; plus usbc_board:D5 PMEG3005EL,315 C282565 and usbc_board:D4 BAS70L,315 C456141)"}
+  - {refs: [MK1], role: microphone, mpn: MSM261DCB002, lcsc: C51928216, footprint: "lcsc:MIC-SMD_5P-L2.8-W1.9_MSM261DCB002", description: "Omnidirectional PDM MEMS microphone behind rear acoustic port (wired on dedicated PDM_SDI net to U1.B24)"}
+  - {refs: [U9], role: touch_controller, mpn: MPR121QR2, lcsc: C91322, footprint: "lcsc:QFN-20_L3.0-W3.0-P0.40-BL", description: "Always-on I2C capacitive SAR/grip/proximity sensor operating in 1.8V mode with Pin 20 (VDD) and Pin 5 (VREG, decoupled by 100 nF C35) tied to always-on VCC_1V8 (matching 2.2 kOhm I2C1 pull-ups R15/R16 and 10 kOhm interrupt pull-ups R5/R38 on VCC_1V8 so V_IH(min)=1.26V), 75 kOhm 1% REXT bias resistor R14 (Pin 7), Pin 8 (MPR121_ELE0) connected via 1 kOhm series isolation resistor R65 (0402WGF1001TCE LCSC C11702) to J2.10 (TP_ELE0 peripheral grip/proximity guard ring electrode), and Pin 1 (~IRQ) routed on dedicated TP_SAR_INT_L net to U1.1U19 (GPIO0_C5_d) with 10 kOhm pull-up R38 to VCC_1V8, while the bonded COF mutual-capacitance X/Y touchscreen controller on J2 is isolated from the always-on VCC_1V8 I2C1/TP_INT_L bus during screen-off sleep by 4-channel SPST CMOS switch U16 (TMUX1112RSVR LCSC C1849384, VDD on VCC_1V8 with 100 nF C139, SEL1..SEL3 driven by LCD_PWR_EN, linking I2C1_SCL/I2C1_SDA/TP_INT_L to J2.2/3/4 TP_I2C1_SCL/TP_I2C1_SDA/TP_COF_INT_L with local pull-ups R62/R63 4.7k C25900 and R64 10k C25744 to VCC1V8_LCD and connector-side ESD diodes D19..D21 PESD5V0F1BL,315 C45961 adjacent to J2.2/3/4 ahead of U16)"}
+  - {refs: [U10], role: speaker_amp, mpn: NS4150B, lcsc: C189961, footprint: "lcsc:MSOP-8_L3.0-W3.0-P0.65-LS5.0-BL", description: "3W filterless Class-D mono audio amplifiers U10 (bottom speaker J9, Right channel) and U23 (NS4150B LCSC C189961, top speaker J7, Left channel, gated together on SPK_AMP_EN with 100 kOhm pull-down R88 0402WGF1003TCE LCSC C25741 to GND and decoupled on VSYS by 10 uF C168 + 100 nF C169 at U10.6 and 10 uF C163 + 100 nF C164 at U23.6): U10 receives non-inverting Right-channel input from U4.41 (HPR_OUT on AUD_LINE_N) via 100 nF C44 + 30 kOhm R21 (0402WGF3002TCE LCSC C25776) into Pin 3 (INP) with Pin 4 (INN) AC-grounded via 100 nF C45 + 30 kOhm R22 (C25776) to GND and 1 uF Bypass cap C43, while U23 receives non-inverting Left-channel input from U4.39 (HPL_OUT on AUD_LINE_L) via 100 nF C161 (C1525) + 30 kOhm R86 (0402WGF3002TCE LCSC C25776) into Pin 3 (INP) with Pin 4 (INN) AC-grounded via 100 nF C162 (C1525) + 30 kOhm R87 (C25776) to GND and 1 uF Bypass cap C160 (C52923) (setting matched differential voltage gain A_VD = 240 kOhm / 30 kOhm = 8.0 V/V [18.1 dB] and in-phase stereo polarity across both speakers: U23 VoP/VoN Pins 8/5 -> L13/L14 -> J7.1/2 SPK_TOP_P and J7.3/4 SPK_TOP_N with C135/C136 + D35/D36, and U10 VoP/VoN Pins 8/5 -> L15/L16 -> J9.1/2 SPK_BOT_P and J9.3/4 SPK_BOT_N with C137/C138 + D37/D38)"}
+  - {refs: [Y1], role: soc_crystal, mpn: X322524MOB4SI, lcsc: C70590, footprint: "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm", description: "24 MHz 12 pF SMD 3225 crystal for RK3566 (with matched 15 pF 50V C0G load caps C20/C21 0402CG150J500NT LCSC C1548 compensating routed trace capacitance and 1 MOhm feedback R7; Wi-Fi U5 uses dedicated local 24 MHz crystal Y3 with matched 15 pF load caps C24/C25 0402CG150J500NT LCSC C1548)"}
+  - {refs: [Y2], role: rtc_crystal, mpn: Q13FC13500004, lcsc: C32346, footprint: "lcsc:FC-135R_L3.2-W1.5", description: "32.768 kHz 12.5 pF SMD 3215 crystal for PMIC RTC (with matched 15 pF 50V C0G load caps C22/C23 0402CG150J500NT LCSC C1548 to GND)"}
+  - {refs: [L1, L2, L3, L4, L5, L6], role: buck_inductor, mpn: WPN201610HR47MT, lcsc: C97009, footprint: "lcsc:IND-SMD_L2.0-W1.6_WPN2016X", description: "0.47 uH 3.4A 201610 power inductors L1..L5 for PMIC bucks and L10 (WPN201610HR47MT LCSC C97009 between BUCK_3V3_SW and BUCK_3V3_L2) for 2A 3.52V synchronous buck-boost U12 (TPS63802DLAR LCSC C2845237 with R39=60.4k C25911 / R40=10k C25744); L6 upgraded on board to 0.47 uH 7.0A I_sat / 4.1A I_rms 2520 WPN252012ER47MT LCSC C317620 for 4A VDD_CPU buck U8; plus L9 2.2 uH WPN201610H2R2MT LCSC C97005 for U5 1.25V buck, L12 1.0 uH WPN201610U1R0MT LCSC C97016 for U13 TLV62569ADRLR LCSC C398367 0.6V buck, L11 2.2 nH LQG15HS2N2S02D LCSC C86061 RF pi-match inductor, and L13..L17 120R@100MHz 2A BLM18PG121SN1D LCSC C14709 speaker EMI and VCCA1V8_PMU analog PLL filter ferrite beads)"}
+  - {refs: [L7], role: wled_inductor, mpn: SWPA252012S100MT, lcsc: C37428, footprint: "Inductor_SMD:L_1008_2520Metric", description: "10 uH 2520 power inductor for WLED boost driver"}
+  - {refs: [L8], role: charger_inductor, mpn: SWPA252012S1R0MT, lcsc: C66001, footprint: "Inductor_SMD:L_1008_2520Metric", description: "1.0 uH 2520 power inductor dedicated to U11 BQ25895 battery charger (upgraded on board to 1.0 uH 5.0A I_sat / 3.5A I_rms 37 mOhm 2520 molded metal-alloy WPN252012E1R0MT LCSC C370610 with R8=196 Ohm 1% 0402WGF1960TCE LCSC C270631 ILIM setting hardware I_INMAX=1.81A typ / 1.96A max < 2.19A min upstream eFuse OCP and local 1uF 25V VBUS input cap C159 C52923 within 1.04 mm of U11.1)"}
+  - {refs: [J1], role: display_fpc, mpn: FPC-0.5HF-40PWBH10, lcsc: C5343289, footprint: "lcsc:FPC-SMD_40P-P0.50_FPC-0.5HF-40PWBH10", description: "40-pin 0.5 mm pitch 1.0 mm height FPC connector for dual-DSI display (Pins 32/33 1.8V VDD powered via GPIO-controlled load switch U14 TPS22919DCKR LCSC C2149796 on VCC1V8_LCD and Pins 35/36 3.30V VCC powered via GPIO-controlled 500 mA 1% LDO regulator U15 TLV75533PDRVR LCSC C2861750 on VCC3V3_LCD [regulated down from 3.52V VCC3V3_TP] so display rails remain OFF at boot until software asserts LCD_PWR_EN on U1.1T18, Pin 38 WLED_K separated from Pin 40 WLED_A by unconnected high-voltage isolation spacer Pin 39 NC while U6 TPS61165DRVR provides internal 38V open-LED OVP, and protected by 36V bidirectional TVS D14 H36VND3B LCSC C20615816 [V_RWM=36V, V_BR=45V > 40V max U6 OVP] on WLED_A at J1.40, D15/D17/D18 PTVS5V5D1BLYL C553450 on WLED_K/VCC1V8_LCD/VCC3V3_LCD, and D16 PESD5V0F1BL,315 C45961 on LCD_RST_L)"}
+  - {refs: [J2], role: touch_fpc, mpn: 0.5K-QX-10PWB, lcsc: C2919478, footprint: "lcsc:FPC-SMD_10P-P0.50_HDGC_0.5K-QX-10PWB", description: "10-pin 0.5 mm pitch 1.0 mm height FPC connector routing switched TP_I2C1_SCL (Pin 2), TP_I2C1_SDA (Pin 3), and TP_COF_INT_L (Pin 4, all isolated when LCD_PWR_EN=0 by U16 TMUX1112RSVR LCSC C1849384 with local pull-ups R62/R63 4.7k C25900 and R64 10k C25744 to VCC1V8_LCD), TP_RST_L (Pin 5 with 10k pull-down R61 to GND), GPIO-gated 3.30V VCC3V3_LCD (Pin 6 via 500 mA LDO U15 TLV75533PDRVR C2861750) and VCC1V8_LCD (Pins 7/8 via U14 TPS22919DCKR C2149796), and TP_ELE0 (Pin 10 routed via 1k R65 C11702 to U9.8 MPR121_ELE0) to the COF capacitive touch sensor, protected by 0.4pF ESD TVS diodes D19..D23 (PESD5V0F1BL,315 C45961, with D19..D21 wired directly on connector-side nets TP_I2C1_SCL, TP_I2C1_SDA, and TP_COF_INT_L immediately adjacent to J2 pins 2, 3, and 4 ahead of U16)"}
+  - {refs: [J3], role: rear_cam_fpc, mpn: 0.5K-QX-30PWB, lcsc: C2919487, footprint: "lcsc:FPC-SMD_30P-P0.50_HDGC_0.5K-QX-30PWB", description: "30-pin 0.5 mm pitch 1.0 mm height FPC connector for rear camera (Pins 19/20 1.8V DOVDD and 2.2 kOhm I2C2 pull-ups R17/R18 powered from U4.3 LDO7 VCC1V8_CAM [Slot 2 1.8V ON] with C31/C60, Pins 22/23 2.8V AVDD from U4.6 LDO9 VCC_2V8 [OTP OFF, software-enabled after DOVDD], Pins 25/26 2.8V VCM from U4.23 LDO1 VCC_AF_2V8 [OTP OFF, software-enabled after AVDD], protected by ESD TVS diodes D24..D31)"}
+  - {refs: [J4], role: front_cam_fpc, mpn: FPC-0.5HF-24PWBH10, lcsc: C5343283, footprint: "lcsc:FPC-SMD_24P-P0.50_XUNPU_FPC-0.5HF-24PWBH10", description: "24-pin 0.5 mm pitch 1.0 mm height FPC connector for front camera OV5648-FF-24P (Pins 12/13 routed on dedicated RK3566 I2C4 bus I2C4_SCL [U1.AE2] and I2C4_SDA [U1.AF2] with 2.2 kOhm pull-ups R84/R85 0402WGF2201TCE LCSC C25879 to VCC1V8_CAM and 0.4pF ESD TVS diodes D47/D48 PESD5V0F1BL,315 LCSC C45961 at J4.12/13 to prevent 0x36 SCCB slave address collision with rear camera J3 OV8858-AF-30P on I2C2_SCL/I2C2_SDA, Pins 19/20 1.8V DOVDD from U4.3 LDO7 VCC1V8_CAM [Slot 2 1.8V ON] with C31/C60, Pins 22/23 2.8V AVDD from U4.6 LDO9 VCC_2V8 [OTP OFF, software-enabled after DOVDD], protected by ESD TVS diodes D29/D30/D32..D34/D47/D48)"}
+  - {refs: [J5], role: battery_conn, mpn: "DF58-4P-1.2V(21)", lcsc: C20723302, footprint: "lcsc:CONN-SMD_4P-P1.20_DF58-4P-1.2V-21", description: "Low-profile 0.95 mm height 1.2 mm pitch battery connector (Pin 1 VBAT_CONN 3.0A rating routed via wide copper pours and 7-via parallel array through 3A hold / 5A trip resettable PTC fuse F1 BSMD0603L-300 LCSC C5374008 to VBAT_PROT pour and high-side -20V -10A 15 mOhm P-channel MOSFET reverse-polarity protection switch Q1 PPM6N20V10 LCSC C918800 [Gate VBAT_RPP_G tied to VBAT Source via 1 MOhm R66 C26083 and pulled to GND via N-MOSFET Q2 RUM002N02T2L C250130 gated by 10:1 VBAT_PROT divider 100 kOhm R70 C25741 / 1 MOhm R71 C26083 with gate-clamp Schottky D49 BAS70L,315 C456141 from GND plus charger-present 0V PCM wake path from CHG_REGN via D43 BAS70L,315 C456141 on VBAT_WAKE and 100 kOhm R72 C25741 to VBAT_PROT] to VBAT with 110A surge TVS D3 TPTVS0571P LCSC C2844712 + 21 uF bulk capacitance C129/C130 2x10uF C19702 + C8 1uF C52923, Pin 2 BAT_NTC 10k thermistor protected by TVS D5 PTVS5V5D1BLYL C553450 + 100nF C131 C1525, Pins 3/4 BAT_SNSP fuel-gauge battery negative return connected via wide F.Cu/In1.Cu/In2.Cu pours and 11-via parallel array to R13.1 [10 mOhm to GND] and U4.62 SNSP with U4.63 SNSN Kelvin-connected via 0 Ohm R67 C17168 on BAT_SNSN to R13.2/GND)"}
+  - {refs: [J6, "usbc_board:J2"], role: usbc_fpc, mpn: 0.5K-QX-16PWB, lcsc: C2919481, footprint: "lcsc:FPC-SMD_16P-P0.50_HDGC_0.5K-QX-16PWB", description: "16-pin 0.5 mm pitch 1.0 mm height FPC connector linking mainboard and USB-C daughterboard via 2 oz heavy-copper Type-B FFC (6 parallel VBUS pins 11..16 = 3.00 A contact rating @ 0.5 A/pin and 3.90 A FFC rating, protected by usbc_board U2 R9=1.37k active OCP at 2.43 A typ [2.19 A min..2.68 A max] with mainboard U11 BQ25895 input current limit capped <= 2.00 A [10.0 W max for the 2.4 W typ / 6.0 W peak tablet] below U2 I_OL(min) = 2.19 A; 8 GND returns on pins 3, 6..10, 17, 18; and protected at mainboard J6 by 0.4pF ESD TVS diodes D9/D10 PESD5V0F1BL,315 C45961 on USB_OTG0_DP/DM, D11/D12 PESD5V0F1BL,315 C45961 on USB_CC1/CC2, and 7.5V standoff / 8.33V min breakdown / 12.9V max clamping unidirectional surge TVS D13 SMF7.5A LCSC C123796 on VBUS)"}
+  - {refs: [J7, J8, J9], role: aux_fpc, mpn: 0.5K-QX-4PWB, lcsc: C2919475, footprint: "lcsc:FPC-SMD_4P-P0.50_HDGC_0.5K-QX-4PWB", description: "4-pin 0.5 mm pitch 1.0 mm height FPC connectors for button flex (J8 protected by TVS D6..D8 PTVS5V5D1BLYL C553450, 100R series resistor R58 C25076 on PWRON_BTN_L -> PWRON_L -> D44/D45 BAS70L,315 C456141 -> PMIC_PWRON_L [with 100nF debounce cap C132 C1525] and CHG_QON_L, and 1nF caps C53/C54 at J8 + C133/C134 at U1.1D17/1C17 SARADC_VIN0/1) and top/bottom speakers (J7/J9 filtered by ferrite beads L13..L16 BLM18PG121SN1D C14709 + 1nF caps C135..C138 C1523 + TVS diodes D35..D38 PTVS5V5D1BLYL C553450)"}
+  - {refs: [SH1, SH2], role: shield_frame, mpn: KH-PBJ-440808, lcsc: C19631108, footprint: "lcsc:CONN-SMD_3P-L4.4-W0.8_C9900042675", description: "0.8 mm height solder-down shield frame clips over SoC/RAM and PMIC"}
+  - {refs: ["usbc_board:J1"], role: usb_c_receptacle, mpn: TYPE-C-31-M-12, lcsc: C165948, footprint: "lcsc:USB-C_SMD-TYPE-C-31-M-12_1", description: "16-pin USB-C receptacle on USB-C daughterboard (VBUS_IN protected by D3 ESTVS2200DRVR LCSC C42400188 22V standoff / 25.8V breakdown / 27.6V typ [28.6V max < 28.8V U2 abs max] 70A 2kW flat-clamp surge TVS, C1 1 uF 50V GRM155R61H105KE05D LCSC C1518208, pulse-rated 0.33W 0603 R3 2.2 Ohm ERJPA3J2R2V LCSC C445778 + C3 1 uF 50V 0603 CL10A105KB8NNNC LCSC C15849 RC damper, and U2 TPS259470ARPWR LCSC C3662799 active 6.54V typ [6.32V..6.75V] OVP / 5.94V typ [5.77V min] recovery / 2.43A typ [2.19A..2.68A] OCP eFuse with R6 34.8k C47493 / R7 5.62k C25909 / R8 9.09k C11549 / R9 1.37k C423239, C5 4.7 nF 50V 0402B472K500NT C1538 on Pin 7 DVDT setting dV/dt=5.11V/ms, local output cap C4 1 uF 25V CL05A105KA5NQNC C52923 + freewheeling Schottky diode D5 PMEG3005EL,315 C282565 on VBUS, and wide stitched F.Cu/B.Cu copper pours across Pads 5 and 6)"}
+  - {refs: ["usbc_board:U1"], role: esd_protection, mpn: USBLC6-2P6, lcsc: C2827693, footprint: "lcsc:SOT-666-6_L1.6-W1.2-P0.50-LS1.6-BL", description: "Low-capacitance rail-to-rail ESD protection array for USB-C D+/D- (Pin 5 on USB_ESD_VBUS decoupled locally by 100 nF 50V C2 CC0402KRX7R9BB104 LCSC C131394 to GND and biased at ~4.7V DC from protected VBUS via 1.0 kOhm 1% current-limiting resistor R10 0402WGF1001TCE LCSC C11702 and 70V ultra-low-leakage blocking diode D4 BAS70L,315 LCSC C456141 on USB_ESD_BIAS so upper steering diodes remain reverse-biased during 3.3V Full-Speed signaling while blocking reverse overvoltage fault current; CC1/CC2 protected by dedicated PTVS5V5D1BLYL D1/D2 LCSC C553450 and isolated by 10 kOhm series resistors R4/R5)"}
+  - {refs: ["usbc_board:R1", "usbc_board:R2"], role: cc_pulldown, mpn: 0402WGF5101TCE, lcsc: C25905, footprint: "Resistor_SMD:R_0402_1005Metric", description: "6.8 kOhm 1% 0402 pull-down resistors (upgraded on usbc_board to 0402WGF6801TCE LCSC C25917 on USB_CC1_CONN and USB_CC2_CONN so 6.8 kOhm in parallel with the 10 kOhm series isolation resistors usbc_board:R4/R5 + 10 kOhm mainboard SARADC shunt resistors R49/R50 yields Rd(eff) = 6.8 kOhm || 20 kOhm = 5.075 kOhm [-0.5% from 5.10 kOhm nominal, well within USB Type-C 5.1 kOhm +/- 10%] for 5V/3A sink detection)"}
+  - {refs: [R1], role: ddr_zq_resistor, mpn: 0402WGF2400TCE, lcsc: C25094, footprint: "Resistor_SMD:R_0402_1005Metric", description: "120 Ohm 1% 0402 ZQ calibration resistor (upgraded on board to 0402WGF1200TCE LCSC C25079 to VCC_DDR for RK3566 DDR_RZQ per RK3566 datasheet; plus independent 240 Ohm 1% 0402WGF2400TCE LCSC C25094 R19 and R20 to VCC0V6_DDR for LPDDR4X U2 ZQ0 and ZQ1)"}
+  - {refs: [R2, R3, R4, R5], role: pullup_resistor, mpn: 0402WGF1002TCE, lcsc: C25744, footprint: "Resistor_SMD:R_0402_1005Metric", description: "10 kOhm 1% 0402 pull-up/bias/divider/protection resistors (R2 and R3 upgraded on board to 2.2 kOhm 1% 0402WGF2201TCE LCSC C25879 pulling I2C0_SCL and I2C0_SDA up to VCC_1V8 for 400 kHz Fast-Mode rise time t_r = 74.6 ns << 300 ns; R4 and R29 pull PMIC_INT_L and PMIC_RESETB up to 3.3V VCC3V3_PMU; R5 and R38 10 kOhm C25744 pull TP_INT_L and TP_SAR_INT_L up to always-on VCC_1V8; R8 196 Ohm 1% 0402WGF1960TCE C270631 sets U11 CHG_ILIM hardware limit to 1.81A typ / 1.96A max (< 2.19A min usbc_board:U2 OCP); R15 and R16 2.2 kOhm C25879 pull I2C1_SCL and I2C1_SDA up to always-on VCC_1V8; R17 and R18 2.2 kOhm C25879 pull I2C2_SCL and I2C2_SDA up to U4.3 LDO7 VCC1V8_CAM; R21 and R22 30 kOhm 0402WGF3002TCE C25776 set U10 NS4150B differential voltage gain to A_VD = 240 kOhm / 30 kOhm = 8.0 V/V [18.1 dB]; R23 110 kOhm 1% 0402WGF1103TCE LCSC C25745 on U7.6 RSET and R24 0.22 Ohm 1% 0402WGF220LTCE LCSC C270628 on U7.7 FB / D1.2 FLASH_LED_K set camera flash LED D1 current to 531 mA Flash / 214 mA Torch; R25 22 Ohm C25092 damps EMMC_CLK_SOC -> EMMC_CLK and R26 0 Ohm C17168 links EMMC_CLK to TP3 TP_MASKROM; R34 47 kOhm 0402WGF4702TCE C25792 and R35 30 kOhm 0402WGF3002TCE C25776 divide VBUS by 0.3896 to VBUS_DET (1.95V at 5.0V VBUS and 2.63V at 6.75V max usbc_board:U2 OVP trip <= 3.30V); R36 75 kOhm C25798 and R37 200 kOhm C25764 form the 3:8 1.10V feedback divider on U4.27 FB3 for VCC_DDR; R39 60.4 kOhm 1% 0402WGF6042TCE LCSC C25911 and R40 10 kOhm C25744 set U12 TPS63802DLAR V_OUT = 0.500V*(1+60.4k/10k) = 3.520V nominal [3.43V..3.62V worst-case] on VCC3V3_SYS supplying U4.30 VCC6 [giving >=220mV nominal / >=126mV worst-case dropout headroom for 3.30V OTP LDO5/LDO6 at cold boot and Maskrom recovery] and U4.57 VCC8 while 500 mA 1% LDOs U21 and U15 TLV75533PDRVR C2861750 regulate VCC_3V3 and VCC3V3_LCD to 3.30V +/- 1%; R41 49.9 Ohm C25120 terminates U5.48; R42 10 kOhm 1% 0402WGF1002TCE LCSC C25744 pulls isolated U5.22 WIFI_SPS_LDO_SEL down to GND for internal buck mode; R43 10 kOhm C25744 and R44 12 kOhm C25752 form the 3.3V-to-1.80V divider on PMIC_SLEEP; R45 10 kOhm C25744 pulls U4.68 CLK_32K up to VCC_1V8; R46 22 Ohm C25092 damps PDM_CLK; R47 300 kOhm C25774 and R48 100 kOhm C25741 form the 1:4 VBAT-to-PMIC_BATDIV divider; R49 and R50 10 kOhm C25744 attenuate USB_CC1/USB_CC2; R51 10 kOhm C25744 pulls EMMC_D0 up to VCC_1V8; R52 10 kOhm C25744 pulls U1.AF38 FLASH_VOL_SEL up to VCC3V3_PMU; R53..R56 100 Ohm C25076 form local feedback protection networks with 1 uF C76..C79 on PMIC_FB1, PMIC_FB2, PMIC_FB4, and VDD_CPU_FB; R57 10 kOhm C25744 pulls LCD_PWR_EN down to GND; R58 100 Ohm C25076 isolates J8.1 PWRON_BTN_L -> PWRON_L; R59 and R60 100 Ohm C25076 protect TP1/TP2 UART2_TX_TP/UART2_RX_TP; R61 10 kOhm C25744 pulls TP_RST_L down to GND; R62 and R63 4.7 kOhm C25900 pull switched TP_I2C1_SCL/TP_I2C1_SDA and R64 10 kOhm C25744 pulls TP_COF_INT_L up to VCC1V8_LCD on J2 side of U16; R65 1 kOhm C11702 isolates TP_ELE0 -> MPR121_ELE0; R66 1 MOhm 0402WGF1004TCE C26083 pulls Q1 gate VBAT_RPP_G up to VBAT Source; R67 0 Ohm C17168 Kelvin-connects U4.63 SNSN on BAT_SNSN to R13.2/GND; R68 100 kOhm C25741 pulls LCD_BL_PWM down to GND at U6.5; R69 100 kOhm C25741 pulls PMIC_EXT_EN down to GND at U12.1; R70 100 kOhm 0402WGF1003TCE C25741 and R71 1 MOhm 0402WGF1004TCE C26083 form the 10:1 VBAT_PROT-to-VBAT_RPP_EN gate bias divider for Q2 RUM002N02T2L C250130 with reverse-battery gate-clamp Schottky diode D49 BAS70L,315 C456141 (Anode on GND -> Cathode on VBAT_RPP_EN, keeping Q2/Q1 strictly OFF under reverse battery while turning Q2/Q1 fully ON across 2.0-4.35V), while D43 BAS70L,315 C456141 (Anode on CHG_REGN -> Cathode on VBAT_WAKE) and R72 100 kOhm 0402WGF1003TCE C25741 (VBAT_WAKE -> VBAT_PROT) provide the charger-present 0V PCM wake path; R73..R77 100 kOhm 0402WGF1003TCE C25741 pull BUCK_0V6_EN, WIFI_REG_ON, WIFI_WL_DIS_L, BT_REG_ON, and BT_DIS_L down to GND; R78 100 kOhm C25741, R79 4.7 kOhm C25900, and R80/R81 100 kOhm C25741 bias U20/U21/U22; R82 and R83 10 kOhm 1% 0402WGF1002TCE C25744 pull BT_HOST_WAKE [U5.19 TEST_MOD_SEL=0] and BT_WAKE_DEV [U5.18] down to GND; R84 and R85 2.2 kOhm 0402WGF2201TCE C25879 pull front camera J4 I2C4_SCL and I2C4_SDA up to VCC1V8_CAM; R86 and R87 30 kOhm 0402WGF3002TCE C25776 set top speaker amplifier U23 NS4150B differential gain to A_VD = 8.0 V/V [18.1 dB] from U4.39 HPL_OUT, and R88 100 kOhm 0402WGF1003TCE C25741 pulls SPK_AMP_EN down to GND; plus main R6..R33 and usbc_board: R3..R10)"}
+  - {refs: [C1, C2, C3, C4, C5, C6], role: bulk_cap, mpn: CL10A106KP8NNNC, lcsc: C19702, footprint: "Capacitor_SMD:C_0603_1608Metric", description: "10 uF 10V and 22 uF 6.3V X5R 0603 bulk decoupling capacitors (C1..C6, C58, C63, C64 on U12 VSYS input, C70/C71, C82 at L5.2 on VCC_1V8, C129/C130 at J5.1/U11 on VBAT, and C163/C165/C166/C168/C178..C180/C182 local VSYS input decoupling at U23/U6/L7/U10/U8/U11/U4/U12 10 uF 10V C19702 plus C170..C173 4x10uF 0402 GRM155R61A106ME44D C77000 at U4 VCC1..VCC4 and C167 10 uF 10V 0603 CL10A106KP8NNNC C19702 at U7.1 VSYS; C65 on U12 VCC3V3_SYS output, C50/C51/C124 on VDD_CPU, C80/C81 2x22uF at L5.2 on VCC_1V8, C89/C90 2x22uF on VDD_LOGIC, C95/C96 2x22uF on VDD_GPU, C102..C104 3x22uF on VCC_DDR, and C120/C121 2x22uF on PMIC_VBUCK4 CL10A226MQ8NRNC LCSC C59461; plus C26 10 uF 25V on CHG_PMID, C28/C46 4.7 uF 16V, C19 1 uF 50V on WLED_A placed at [13.6, 65.4] mm immediately adjacent to D2.1 and U6.3 GND, and usbc_board:C3 1 uF 50V 0603 CL10A105KB8NNNC C15849 RC snubber cap)"}
+  - {refs: [C7, C8, C9, C10, C11, C12], role: rail_cap, mpn: CL05A105KA5NQNC, lcsc: C52923, footprint: "Capacitor_SMD:C_0402_1005Metric", description: "1 uF 25V/50V X5R 0402 rail decoupling and feedback compensation capacitors (C7..C12, C29..C34, C36..C41, C43, C49 4.7 uF 25V X5R 0402 GRM155R61E475ME15D LCSC C2858031 on U7.10 FLASH_LED_A, C55 on U4.45 VCC_RTC, C59, C60, C62 on U4.22 VCC5, C147 on U4.30 VCC6 [VCC3V3_SYS], C151 1 uF 25V C52923 on U21.1 VCC_3V3 LDO output, C159 1 uF 25V C52923 local VBUS input decoupling at [14.55, 96.27] mm within 1.04 mm of U11.1, C160 on U23.2 AUD_TOP_BYPASS, C174/C177/C181 local 1 uF VSYS decoupling at U4 VCC5/VCC7/VCC_SPK_HP, C76..C79 1 uF high-frequency feedback compensation caps across R53..R56 on PMIC_FB1/PMIC_FB2/PMIC_FB4/VDD_CPU_FB, C127 and C142 on VCCA1V8_IMAGE, C128 on U14.6 VCC1V8_LCD, C140 on VCCA1V8_PMU, C18 2.2 uF C107369 on EMMC_VDDI, usbc_board:C1 1 uF 50V GRM155R61H105KE05D C1518208 on VBUS_IN, and usbc_board:C4 1 uF 25V C52923 on VBUS)"}
+  - {refs: [C13, C14, C15, C16, C17, C18], role: bypass_cap, mpn: CL05B104KO5NNNC, lcsc: C1525, footprint: "Capacitor_SMD:C_0402_1005Metric", description: "100 nF 16V X7R 0402 bypass and filter capacitors (C13..C17, C35 on U9 VCC_1V8, C42, C44/C45, C47, C48, C52, C56, C57, C61, C72, C75, C83..C88 on VCC_1V8 at U1/U2/U3/U5, C91..C94 on VDD_LOGIC under U1, C97..C101 on VDD_GPU under U1, C105..C119 15x100nF on VCC_DDR under U1/U2, C122/C123 on PMIC_VBUCK4 under U1, C125/C126 on VDD_CPU under U1, C131 on BAT_NTC, C132 on PMIC_PWRON_L, C152 on U22 VCC_1V8, C149/C150/C153..C158 on U20/U2/U5/U3/U1, C139 on U16 VCC_1V8, C141 on VCCA1V8_PMU, C143 on VCCA1V8_IMAGE, C144 on U17 VCC_1V8, C145/C146 on U18/U19 VCC_3V3, C161/C162 100 nF AC-coupling caps on U23 INP/INN, and C164/C169/C175/C176 local 100 nF HF VSYS bypass caps at U23/U10/U6/U7; C53/C54/C73/C74/C133..C138 1 nF C1523 button/SARADC/speaker filter caps; C27 47 nF; C20..C25 15 pF C1548 on Y1/Y2/Y3 and C66/C67 18 pF C1549; C68/C69 1.5 pF; and usbc_board:C2/C5)"}
+purchased:
+  - id: display_panel
+    description: "Sharp LQ084R1SX01 8.4-inch 1600x2560 WQXGA oxide TFT LCD module with dual-channel MIPI-DSI and WLED backlight"
+    mpn: LQ084R1SX01
+    url: "https://www.panelook.com/LQ084R1SX01_Sharp_8.4_LCM_parameter_23346.html"
+    dims_mm: [117.04, 191.164, 3.2]
+    position_mm: [-94.52, -172.582, 2.3]
+    connects_to: J1
+    dims_source: "Sharp LQ084R1SX01 datasheet & prompt specification: active area 113.04 x 180.864 mm, outline 117.04 x 191.164 x 3.2 mm, 40-pin dual-DSI tail"
+    model: case/purchased/display_panel.stl
+    connectors:
+      - {id: dsi_tail, at_mm: [115.0, 82.58, 0.5], pins: 40, pitch_mm: 0.5, kind: fpc, mouth: [-1.0, 0.0, 0.0], long_axis: [0.0, 1.0, 0.0]}
+  - id: touch_sensor
+    description: "Optically bonded 8.4-inch COF (Chip-On-Flex) X/Y matrix capacitive touch sensor film under cover glass with 10-pin 0.5 mm FPC tail (on-flex mutual-capacitance touch controller interfaced via U16 TMUX1112RSVR bus-isolation switch on TP_I2C1_SCL/TP_I2C1_SDA/TP_COF_INT_L with local pull-ups R62/R63/R64 to VCC1V8_LCD, TP_RST_L, peripheral grip/proximity guard ring electrode TP_ELE0 on J2.10 via 1k R65 to U9.8 MPR121_ELE0, and GPIO-gated VCC3V3_LCD and VCC1V8_LCD on J2)"
+    mpn: TP-084-GG-10P
+    url: "https://www.buydisplay.com/"
+    dims_mm: [116.0, 186.0, 0.3]
+    position_mm: [-94.0, -170.0, 5.2]
+    connects_to: J2
+    dims_source: "8.4-inch capacitive touch sensor outline 116.0 x 186.0 x 0.3 mm laminated under 0.8 mm cover glass (1.1 mm combined stack), 10-pin 0.5 mm FPC tail"
+    model: case/purchased/touch_sensor.stl
+    connectors:
+      - {id: tp_tail, at_mm: [114.0, 60.0, 0.15], pins: 10, pitch_mm: 0.5, kind: fpc, mouth: [1.0, 0.0, 0.0], long_axis: [0.0, 1.0, 0.0]}
+  - id: battery
+    description: "1S 3.8V 5600mAh (21.28Wh) Li-Po pouch battery pack with integrated protection board (PCM), 10k NTC thermistor, and 3-wire harness (Pin 1 V+ -> J5.1 VBAT_CONN -> F1 BSMD0603L-300 -> VBAT_PROT -> Q1 PPM6N20V10 high-side P-MOSFET reverse-polarity switch [Gate VBAT_RPP_G pulled to VBAT Source via 1M R66 and pulled to GND via Q2 RUM002N02T2L gated by 10:1 VBAT_PROT divider 100k R70 / 1M R71 with gate-clamp Schottky D49 from GND plus CHG_REGN-to-VBAT_WAKE Schottky D43 / 100k R72 to VBAT_PROT 0V PCM wake path] -> VBAT, Pin 2 NTC -> J5.2 BAT_NTC, Pin 3 GND -> J5.3/J5.4 BAT_SNSP fuel-gauge battery negative return connected to U4.62 SNSP and via 10 mOhm R13 to GND with U4.63 SNSN Kelvin-connected via 0R R67 on BAT_SNSN to R13.2/GND)"
+    mpn: LP3698162-5600
+    url: "https://www.lipolbattery.com/"
+    dims_mm: [98.0, 162.0, 3.6]
+    position_mm: [-100.5, -158.0, -1.6]
+    connects_to: J5
+    dims_source: "Standard 3698162 1S Li-Po pouch cell specification: 3.6 mm nominal thickness (3.8 mm with swell allowance) x 98.0 mm width x 162.0 mm length, 21.28 Wh, 3-wire harness (V+, NTC, GND)"
+    model: case/purchased/battery.stl
+    connectors:
+      - {id: bat_lead, at_mm: [98.0, 56.0, 1.8], pins: 3, pitch_mm: 1.2, kind: harness}
+  - id: rear_camera
+    description: "8 MP autofocus MIPI-CSI rear camera module with 30-pin 0.5 mm FPC tail (1.8V DOVDD on J3.19/20 from U4.3 LDO7 VCC1V8_CAM [Slot 2 1.8V ON], 2.8V AVDD on J3.22/23 from U4.6 LDO9 VCC_2V8 [OTP OFF], 2.8V VCM AF on J3.25/26 from U4.23 LDO1 VCC_AF_2V8 [OTP OFF], and integrated on-module LDO generating 1.2V DVDD sensor core rail)"
+    mpn: OV8858-AF-30P
+    url: "https://www.arducam.com/"
+    dims_mm: [11.5, 11.5, 5.2]
+    position_mm: [10.45, 1.45, -2.6]
+    connects_to: J3
+    dims_source: "Compact 8 MP MIPI-CSI camera module: 11.5 x 11.5 x 5.2 mm barrel/base seated inside 13.5 mm rear lens ring, 30-pin 0.5 mm FPC tail"
+    model: case/purchased/rear_camera.stl
+    connectors:
+      - {id: cam_rear_tail, at_mm: [1.0, 0.0, 2.6], pins: 30, pitch_mm: 0.5, kind: fpc, mouth: [-1.0, 0.0, 0.0], long_axis: [0.0, 1.0, 0.0]}
+  - id: front_camera
+    description: "5 MP fixed-focus MIPI-CSI front camera module with 24-pin 0.5 mm FPC tail (dedicated I2C4_SCL/I2C4_SDA on J4.12/13 from U1.AE2/AF2 with 2.2k pull-ups R84/R85 to VCC1V8_CAM and ESD TVS D47/D48 eliminating 0x36 address collision with rear camera J3 on I2C2, 1.8V DOVDD on J4.19/20 from U4.3 LDO7 VCC1V8_CAM [Slot 2 1.8V ON], 2.8V AVDD on J4.22/23 from U4.6 LDO9 VCC_2V8 [OTP OFF], and integrated on-module LDO generating 1.5V DVDD sensor core rail)"
+    mpn: OV5648-FF-24P
+    url: "https://www.arducam.com/"
+    dims_mm: [8.0, 8.0, 3.8]
+    position_mm: [-40.0, 12.8, 1.4]
+    connects_to: J4
+    dims_source: "Compact 5 MP MIPI-CSI front camera module: 8.0 x 8.0 x 3.8 mm, centred at front bezel camera window [67.0, 5.2] mm, 24-pin 0.5 mm FPC tail"
+    model: case/purchased/front_camera.stl
+    connectors:
+      - {id: cam_front_tail, at_mm: [8.0, 4.0, 1.0], pins: 24, pitch_mm: 0.5, kind: fpc, mouth: [0.0, 0.0, -1.0], long_axis: [1.0, 0.0, 0.0]}
+  - id: top_speaker
+    description: "Top landscape-stereo micro-speaker enclosure module"
+    mpn: SPK-1511-BOX-TOP
+    url: "https://www.soberton.com/"
+    dims_mm: [24.0, 9.0, 3.0]
+    position_mm: [-78.0, 10.0, -1.4]
+    connects_to: J7
+    dims_source: "Tablet micro-speaker box 24.0 x 9.0 x 3.0 mm with 2-conductor flex/lead"
+    model: case/purchased/top_speaker.stl
+    connectors:
+      - {id: spk_top_lead, at_mm: [24.0, 4.5, 1.5], pins: 4, pitch_mm: 0.5, kind: fpc, mouth: [1.0, 0.0, 0.0], long_axis: [0.0, 1.0, 0.0]}
+  - id: bottom_speaker
+    description: "Bottom landscape-stereo micro-speaker enclosure module"
+    mpn: SPK-1511-BOX-BOT
+    url: "https://www.soberton.com/"
+    dims_mm: [24.0, 9.0, 3.0]
+    position_mm: [-78.0, -173.0, -1.4]
+    connects_to: J9
+    dims_source: "Tablet micro-speaker box 24.0 x 9.0 x 3.0 mm with 2-conductor flex/lead"
+    model: case/purchased/bottom_speaker.stl
+    connectors:
+      - {id: spk_bot_lead, at_mm: [24.0, 4.5, 1.5], pins: 4, pitch_mm: 0.5, kind: fpc, mouth: [1.0, 0.0, 0.0], long_axis: [0.0, 1.0, 0.0]}
+  - id: button_flex
+    description: "Top power button and volume up/down metal-dome switch flex cable assembly"
+    mpn: FPC-BTN-3SW-05P4
+    url: "https://www.molex.com/"
+    dims_mm: [98.0, 3.0, 1.2]
+    position_mm: [-88.0, 17.5, 0.8]
+    connects_to: J8
+    dims_source: "Custom polyimide button flex strip 98.0 x 3.0 x 1.2 mm along top wall with 3 tactile dome switches (at top power and volume positions) and 4-pin 0.5 mm FPC tail to mainboard J8"
+    model: case/purchased/button_flex.stl
+    connectors:
+      - {id: btn_tail, at_mm: [87.0, 0.0, 0.6], pins: 4, pitch_mm: 0.5, kind: fpc, mouth: [0.0, -1.0, 0.0], long_axis: [0.0, 1.0, 0.0]}
+enclosure:
+  process: cnc
+  wall_mm: 1.0
+  clearance_floor_mm: 0.2
+  parts:
+    - id: back_shell
+      file: case/out/back_shell.stl
+      role: shell
+      process: cnc
+      material: "6061-T6 aluminium"
+      finish: "bead-blast + space-grey anodise"
+      color: "#52565e"
+      description: "CNC-milled 6061-T6 aluminium unibody back shell with 1.0 mm floor/walls, 14.0 mm plan-view corner radius, integral 13.5 mm raised rear camera ring (1.0 mm proud), internal M1.4 standoffs, and graphite/thermal pad seat"
+    - id: rf_window
+      file: case/out/rf_window.stl
+      role: window
+      process: cnc
+      material: "PC/ABS RF-transparent plastic"
+      finish: "matte dark grey"
+      color: "#484c54"
+      description: "Flush plastic RF window insert in the upper-right edge wall aligned with the Wi-Fi/BT antenna ANT1, invisible from the rear view"
+    - id: rear_camera_glass
+      file: case/out/rear_camera_glass.stl
+      role: window
+      process: cnc
+      material: "tempered optical glass"
+      finish: "AR-coated clear with dark mask"
+      color: "#1c2026"
+      description: "Round optical lens window seated inside the 13.5 mm raised rear camera ring"
+    - id: flash_window
+      file: case/out/flash_window.stl
+      role: window
+      process: sla
+      material: "translucent optical polycarbonate"
+      finish: "frosted diffuser"
+      color: "#e6e8ec"
+      description: "5.6 mm round LED flash diffuser window seated flush in the rear shell at [14.8, 33.0] mm"
+    - id: power_button
+      file: case/out/power_button.stl
+      role: button
+      process: cnc
+      material: "6061-T6 aluminium"
+      finish: "anodised"
+      color: "#484c54"
+      description: "Top edge power button cap with internal retention flange actuating SW1 on button_board"
+    - id: vol_up_button
+      file: case/out/vol_up_button.stl
+      role: button
+      process: cnc
+      material: "6061-T6 aluminium"
+      finish: "anodised"
+      color: "#484c54"
+      description: "Side edge volume-up button cap with internal retention flange actuating SW2 on button_board"
+    - id: vol_down_button
+      file: case/out/vol_down_button.stl
+      role: button
+      process: cnc
+      material: "6061-T6 aluminium"
+      finish: "anodised"
+      color: "#484c54"
+      description: "Side edge volume-down button cap with internal retention flange actuating SW3 on button_board"
+    - id: front_bezel
+      file: case/out/front_bezel.stl
+      role: other
+      process: cnc
+      material: "PC/ABS black bezel frame"
+      finish: "matte black mask"
+      color: "#14161a"
+      description: "Front perimeter bezel mask frame with 3.0 mm front camera window and inner seat for cover_glass"
+    - id: cover_glass
+      file: case/out/cover_glass.stl
+      role: window
+      process: cnc
+      material: "chemically strengthened silicate glass"
+      finish: "polished optical display cover glass"
+      color: "#202632"
+      description: "Active display cover glass window bonded into front_bezel over the display and touch sensor"
+assembly:
+  - {part: back_shell, travel_mm: 0, held_by: base, note: "1. CNC aluminium unibody back shell base"}
+  - {part: rf_window, direction: [-1, 0, 0], travel_mm: 15, may_touch: [back_shell], held_by: press_fit, held_with: [back_shell], note: "Flush right-edge plastic RF window insert aligned with ANT1"}
+  - {part: rear_camera_glass, direction: [0, 0, 1], travel_mm: 10, may_touch: [back_shell], held_by: press_fit, held_with: [back_shell], note: "Rear camera lens window seated in raised camera ring"}
+  - {part: flash_window, direction: [0, 0, 1], travel_mm: 10, may_touch: [back_shell], held_by: press_fit, held_with: [back_shell], note: "Rear flash and mic diffuser window inserts"}
+  - {part: power_button, direction: [0, 1, 0], travel_mm: 10, may_touch: [back_shell], held_by: captured, note: "Top power button inserted into top wall slot"}
+  - {part: vol_up_button, direction: [0, 1, 0], travel_mm: 10, may_touch: [back_shell], held_by: captured, note: "Volume up button inserted into top wall slot"}
+  - {part: vol_down_button, direction: [0, 1, 0], travel_mm: 10, may_touch: [back_shell], held_by: captured, note: "Volume down button inserted into top wall slot"}
+  - {part: pcba, direction: [0, 0, -1], travel_mm: 20, may_touch: [back_shell], held_by: captured, note: "2. Mainboard installed along long edge onto M1.4 standoffs over 0.5 mm thermal pad"}
+  - {part: "pcba:usbc_board", direction: [0, 0, -1], travel_mm: 20, may_touch: [back_shell], held_by: captured, note: "2b. USB-C daughterboard installed at bottom edge"}
+  - {part: battery, direction: [0, 0, -1], travel_mm: 25, may_touch: [back_shell], held_by: captured, note: "3. 1S Li-Po pouch battery installed into main cavity"}
+  - {part: button_flex, direction: [0, 0, -1], travel_mm: 25, may_touch: [back_shell, power_button, vol_up_button, vol_down_button], held_by: captured, note: "4a. Button flex assembly installed behind top power and volume buttons"}
+  - {part: rear_camera, direction: [0, 0, -1], travel_mm: 25, may_touch: [back_shell, rear_camera_glass], held_by: captured, note: "4b. Rear MIPI-CSI camera module seated in top corner"}
+  - {part: front_camera, direction: [0, 0, -1], travel_mm: 25, may_touch: [back_shell], held_by: captured, note: "4c. Front MIPI-CSI camera module seated at top bezel"}
+  - {part: top_speaker, direction: [0, 0, -1], travel_mm: 25, may_touch: [back_shell], held_by: captured, note: "4d. Top stereo micro-speaker seated in top chamber"}
+  - {part: bottom_speaker, direction: [0, 0, -1], travel_mm: 25, may_touch: [back_shell], held_by: captured, note: "4e. Bottom stereo micro-speaker seated in bottom chamber"}
+  - {part: display_panel, direction: [0, 0, -1], travel_mm: 30, may_touch: [back_shell], held_by: captured, note: "5. Sharp LQ084R1SX01 8.4-inch display module seated onto interior ledge"}
+  - {part: touch_sensor, direction: [0, 0, -1], travel_mm: 35, may_touch: [display_panel], held_by: captured, note: "6a. Bonded capacitive touch sensor layer"}
+  - {part: front_bezel, direction: [0, 0, -1], travel_mm: 40, may_touch: [back_shell, touch_sensor, display_panel], held_by: press_fit, held_with: [back_shell], note: "6b. Front perimeter bezel mask seated into top rim of back_shell"}
+  - {part: cover_glass, direction: [0, 0, -1], travel_mm: 40, may_touch: [front_bezel, touch_sensor, display_panel], held_by: press_fit, held_with: [front_bezel], note: "6c. Active display cover glass bonded last into front_bezel"}
+cables:
+  - id: usbc_fpc_cable
+    kind: ffc
+    a: {part: pcba, connector: J6}
+    b: {part: "pcba:usbc_board", connector: J2}
+    pins: 16
+    pitch_mm: 0.5
+    length_mm: 92.0
+    width_mm: 8.5
+    mpn: "FFC-0.5-16P-92MM-TYPE-B"
+    note: "2 oz (0.070 mm) heavy-copper Type-B (reverse/opposite-side contact, Pin 1 to Pin 1) 16-pin 0.5 mm FFC cable (0.65 A/pin continuous FFC rating = 3.90 A and 0.50 A/pin connector contact rating = 3.00 A across 6 parallel VBUS pins 11..16, protected by usbc_board U2 R9=1.37k active OCP at 2.43 A typ / 2.68 A max, with 8 GND returns on pins 3, 6..10, 17, 18) with asymmetric alignment tabs and Pin-1 polarity stripe so top-mounted J6 (mainboard) and top-mounted J2 (usbc_board) mate 1-to-1 without reversal"
+    route:
+      - {at_mm: [10.5, -126.0, 1.3]}
+      - {at_mm: [10.5, -160.5, 1.3]}
+      - {at_mm: [-36.0, -160.5, 1.3]}
+  - id: button_fpc_cable
+    kind: ffc
+    a: {part: pcba, connector: J8}
+    b: {part: button_flex, connector: btn_tail}
+    pins: 4
+    pitch_mm: 0.5
+    length_mm: 138.0
+    width_mm: 2.5
+    route:
+      - {at_mm: [-1.2, -114.0, 1.4]}
+      - {at_mm: [-1.2, 16.5, 1.4]}
+  - id: display_dsi_cable
+    kind: ffc
+    a: {part: pcba, connector: J1}
+    b: {part: display_panel, connector: dsi_tail}
+    pins: 40
+    pitch_mm: 0.5
+    length_mm: 52.0
+    width_mm: 20.5
+    route:
+      - {at_mm: [-1.8, -68.0, 2.05]}
+      - {at_mm: [-1.8, -90.0, 2.05]}
+      - {at_mm: [20.48, -90.0, 2.05]}
+  - id: touch_fpc_cable
+    kind: ffc
+    a: {part: pcba, connector: J2}
+    b: {part: touch_sensor, connector: tp_tail}
+    pins: 10
+    pitch_mm: 0.5
+    length_mm: 64.0
+    width_mm: 5.5
+    route:
+      - {at_mm: [-1.8, -88.0, 2.1]}
+      - {at_mm: [25.5, -88.0, 2.1]}
+      - {at_mm: [25.5, -110.0, 2.1]}
+      - {at_mm: [23.5, -110.0, 5.35]}
+  - id: rear_camera_cable
+    kind: ffc
+    a: {part: pcba, connector: J3}
+    b: {part: rear_camera, connector: cam_rear_tail}
+    pins: 30
+    pitch_mm: 0.5
+    length_mm: 45.0
+    width_mm: 15.5
+    route:
+      - {at_mm: [-1.2, -24.0, 1.4]}
+      - {at_mm: [-1.2, 1.45, 1.4]}
+      - {at_mm: [9.5, 1.45, 0.0]}
+  - id: front_camera_cable
+    kind: ffc
+    a: {part: pcba, connector: J4}
+    b: {part: front_camera, connector: cam_front_tail}
+    pins: 24
+    pitch_mm: 0.5
+    length_mm: 100.0
+    width_mm: 12.5
+    route:
+      - {at_mm: [-1.2, -44.0, 1.2], width_axis: [0.0, 1.0, 0.0]}
+      - {at_mm: [-1.2, 10.5, 1.2], width_axis: [0.0, 1.0, 0.0]}
+      - {at_mm: [-32.0, 10.5, 1.2], width_axis: [1.0, 0.0, 0.0]}
+      - {at_mm: [-32.0, 16.8, 1.2], width_axis: [1.0, 0.0, 0.0]}
+  - id: battery_harness
+    kind: harness
+    a: {part: pcba, connector: J5}
+    b: {part: battery, connector: bat_lead}
+    pins: 3
+    pitch_mm: 1.2
+    length_mm: 10.0
+    mpn: "DF58-4S-1.2C-3W"
+    note: "1-to-1 3-wire battery harness (Pin 1 = V+ / VBAT_CONN at 3.0 A contact rating -> F1 -> VBAT_PROT -> Q1 -> VBAT, Pin 2 = NTC / BAT_NTC, Pin 3 = GND / BAT_SNSP fuel-gauge battery negative return to U4.62 SNSP and through 10 mOhm R13 to GND with U4.63 SNSN Kelvin-connected via 0 Ohm R67 on BAT_SNSN to R13.2/GND, and J5 Pin 4 tied in parallel to BAT_SNSP so both 3-pin Pins 1..3 and 4-cavity DF58-4S-1.2C terminations mate 1-to-1)"
+    route:
+      - {at_mm: [-0.8, -102.0, 1.3]}
+      - {at_mm: [-1.5, -102.0, 0.2]}
+  - id: top_speaker_cable
+    kind: ffc
+    a: {part: pcba, connector: J7}
+    b: {part: top_speaker, connector: spk_top_lead}
+    pins: 4
+    pitch_mm: 0.5
+    length_mm: 86.0
+    width_mm: 2.5
+    route:
+      - {at_mm: [-1.2, -11.0, 1.4]}
+      - {at_mm: [-1.2, 6.5, 1.4]}
+      - {at_mm: [-52.0, 6.5, 0.5]}
+      - {at_mm: [-52.0, 14.5, 0.5]}
+  - id: bottom_speaker_cable
+    kind: ffc
+    a: {part: pcba, connector: J9}
+    b: {part: bottom_speaker, connector: spk_bot_lead}
+    pins: 4
+    pitch_mm: 0.5
+    length_mm: 125.0
+    width_mm: 2.5
+    route:
+      - {at_mm: [21.0, -126.5, 1.3]}
+      - {at_mm: [21.0, -160.0, 0.5]}
+      - {at_mm: [-51.0, -160.0, 0.5]}
+      - {at_mm: [-51.0, -168.5, 0.1]}
+actuators:
+  - id: ACT_PWR
+    feature: F_BTN_PWR
+    case_part: power_button
+    target: {part: button_flex}
+    kind: push
+    element_axis: [0, -1, 0]
+    travel_mm: 0.25
+    source: "Tactile metal-dome switch on button_flex assembly: top-edge actuation along -Y, 0.25 mm travel"
+  - id: ACT_VOL_UP
+    feature: F_BTN_VOL_UP
+    case_part: vol_up_button
+    target: {part: button_flex}
+    kind: push
+    element_axis: [0, -1, 0]
+    travel_mm: 0.25
+    source: "Tactile metal-dome switch on button_flex assembly: top-edge actuation along -Y, 0.25 mm travel"
+  - id: ACT_VOL_DN
+    feature: F_BTN_VOL_DN
+    case_part: vol_down_button
+    target: {part: button_flex}
+    kind: push
+    element_axis: [0, -1, 0]
+    travel_mm: 0.25
+    source: "Tactile metal-dome switch on button_flex assembly: top-edge actuation along -Y, 0.25 mm travel"
+  - id: ACT_REAR_MIC
+    feature: F_REAR_MIC
+    case_part: flash_window
+    target: {part: pcba, ref: MK1}
+    kind: optical
+    element_axis: [0, 0, -1]
+    range_mm: 3.0
+    source: "MEMS microphone MSM261DCB002 acoustic port aligned with 1.0 mm rear shell hole and acoustic mesh insert"
+  - id: ACT_REAR_FLASH
+    feature: F_REAR_FLASH
+    case_part: flash_window
+    target: {part: pcba, ref: D1}
+    kind: optical
+    element_axis: [0, 0, -1]
+    range_mm: 3.0
+    source: "Rear flash LED KT-0603W aligned behind 5.6 mm translucent rear flash diffuser window"
+requirements:
+  - id: R1
+    text: "Compact 8-inch-class Android tablet about 134 x 198 x 9.4 mm with 14 mm corner radius and CNC aluminium back shell"
+    how_met: "134.0 x 198.0 x 9.4 mm envelope (10.4 mm at camera bump), 14.0 mm corner radius, 1.0 mm wall CNC 6061-T6 aluminium back_shell with top-edge plastic RF window and 0.5 mm thermal pad + graphite sheet to SoC shield"
+    quantity: "134 x 198 x 9.4 mm, R14 mm corners"
+  - id: R2
+    text: "Rear camera ring 13.5 mm across and 1 mm proud at [14.8, 14.8] mm, rear mic hole 1 mm across at [14.8, 24.6] mm, rear LED flash window 5.6 mm across at [14.8, 33.0] mm, nothing else on back"
+    how_met: "F_REAR_CAM (13.5 mm, +1.0 mm bump at [14.8, 14.8]), F_REAR_MIC (1.0 mm hole at [14.8, 24.6] over MK1), and F_REAR_FLASH (5.6 mm window at [14.8, 33.0] over D1 driven by AW3641EDNR U7), with no rear logo or plastic strip"
+    quantity: "3 rear features on x=14.8 mm line"
+  - id: R3
+    text: "Sharp LQ084R1SX01 8.4-inch 1600x2560 dual-channel MIPI-DSI display driven by both RK3566 DSI ports, mainboard WLED boost driver, and bonded cover-glass touch sensor over I2C + INT + RST"
+    how_met: "Purchased LQ084R1SX01 wired to 40-pin FPC J1 carrying RK3566 MIPI-DSI0 + MIPI-DSI1 (8 lanes total), TPS61165DRVR WLED boost U6 on mainboard, and 10-pin touch FPC J2 linking the bonded COF mutual-capacitance X/Y touch controller via U16 TMUX1112RSVR bus-isolation switch (TP_I2C1_SCL, TP_I2C1_SDA, TP_COF_INT_L) and TP_RST_L while always-on MPR121QR2 U9 on VCC_1V8 monitors peripheral grip/SAR electrode TP_ELE0 via 1k R65"
+    quantity: "8.4 in, 1600 x 2560, 2x4 MIPI-DSI lanes"
+  - id: R4
+    text: "8-layer 0.8 mm ENIG mainboard (28 x 125 mm) along long edge with RK3566 (C2943786), 4 GB LPDDR4X within 15 mm, 64 GB eMMC 5.1, RK817/RK809 PMIC + TCS4525-class CPU buck, 4x M1.4 holes, shield frames, <=1.2 mm top / <=1.0 mm bottom height"
+    how_met: "28.0 x 125.0 x 0.8 mm 8-layer JLCPCB board with RK3566 U1, K4FBE3D4HM-MGCJ 4 GB LPDDR4X U2 at 13.5 mm centre distance, FEMDNN064G-C9A61 64 GB eMMC U3, RK809-5/RK817 PMIC U4, RK860-0 CPU buck U8, 4x M1.4 mounting holes, and SH1/SH2 shield frames"
+    quantity: "28 x 125 x 0.8 mm, 8 layers"
+  - id: R5
+    text: "Declare high-speed groups for every DDR byte lane, CA group, DSI0, DSI1, camera CSI, and USB 2.0 with impedance targets"
+    how_met: "9 high_speed groups in electrical.high_speed covering all 4 LPDDR4X byte lanes (40 ohm SE / 80 ohm diff), LPDDR4X CA/CLK bus, MIPI-DSI0, MIPI-DSI1, MIPI-CSI cameras (100 ohm diff), and USB 2.0 OTG (90 ohm diff)"
+    quantity: "9 high-speed constraint groups"
+  - id: R6
+    text: "USB-C daughter board (12 x 25 mm) centred on bottom edge with 5.1k CC pull-downs for 5V/3A sink, ESD on CC and D+/D-, and 0.5 mm FPC to mainboard"
+    how_met: "usbc_board (25.0 x 12.0 mm) at bottom edge with TYPE-C-31-M-12 J1, TPS259470ARPWR active 6.54V typ (6.32V..6.75V) OVP / 5.94V typ (5.77V min) recovery / 2.43A typ (2.19A min, 2.68A max) OCP eFuse U2 (R6=34.8k C47493, R7=5.62k C25909, R8=9.09k C11549, R9=1.37k C423239, C5=4.7nF C1538 on DVDT Pin 7 setting dV/dt=5.11V/ms, local output cap C4=1uF C52923 + Schottky freewheeling clamp diode D5=PMEG3005EL,315 C282565 on VBUS, and wide stitched F.Cu/B.Cu polygon pours on VBUS_IN and VBUS, with mainboard U11 BQ25895 input current limit capped <= 2.00 A [10.0 W max for the 2.4 W typ / 6.0 W peak tablet] below U2 I_OL(min) = 2.19 A), 2.0 uF 50V unswitched VBUS_IN capacitance (C1 1 uF 50V C1518208 + 0.33W 0603 R3 2.2R C445778 / C3 1 uF 50V C15849 RC damper) + D3 ESTVS2200DRVR (C42400188, V_RWM=22V, V_BR=25.8V, V_CL=27.6V typ / 28.6V max < 28.8V U2 abs max), 6.8 kOhm 1% CC1/CC2 pull-downs R1/R2 (0402WGF6801TCE C25917, yielding Rd(eff) = 6.8 kOhm || [10 kOhm R4/R5 + 10 kOhm R49/R50] = 5.075 kOhm within 5.1 kOhm +/- 10%) + PTVS5V5D1BLYL D1/D2 + 10 kOhm series isolation resistors R4/R5, USBLC6-2P6 ESD protection U1 with Pin 5 on USB_ESD_VBUS decoupled by 100 nF 50V C2 to GND and biased at ~4.7V DC from VBUS via 1.0 kOhm R10 (C11702) and BAS70L,315 blocking diode D4 (C456141), and 16-pin 0.5 mm FPC J2 linked to mainboard J6 via 2 oz heavy-copper Type-B FFC (6 VBUS pins = 3.00 A contact rating > 2.68 A max U2 OCP)"
+    quantity: "25 x 12 mm sub-board, 5 V / 3 A sink"
+  - id: R7
+    text: "Single 1S Li-Po battery (18-25 Wh) with NTC and protection board filling interior, top and bottom stereo micro-speakers, front and rear MIPI-CSI cameras, and top + volume buttons on a small flex"
+    how_met: "LP3698162-5600 1S 3.8V 21.28 Wh Li-Po pouch cell (98 x 162 x 3.6 mm) covering >75% of free floor, top/bottom speaker modules driven by RK817/RK809 codec + NS4150B Class-D amp, rear 8MP + front 5MP MIPI-CSI cameras, and button_board flex"
+    quantity: "21.28 Wh 1S Li-Po, 2 speakers, 2 cameras, 3 buttons"
+decisions:
+  - question: "Bring-up risk 1: RK3566 dual-DSI pixel clock vs Sharp LQ084R1SX01 1600 x 2560 resolution"
+    choice: "Drive Sharp LQ084R1SX01 in 8-lane dual-channel MIPI-DSI mode (DSI0 + DSI1) and reduce refresh rate to 50-54 Hz if 60 Hz exceeds VOP2 pixel clock"
+    reason: "1600 x 2560 (4.096 MP) is approximately 11% above the RK3566 datasheet's listed dual-DSI limit (2560 x 1440 @ 60 Hz = 3.686 MP), so the panel may require a reduced refresh rate (~54 Hz) during bring-up."
+  - question: "Bring-up risk 2: SoC upgrade path for full 1600 x 2560 @ 60+ Hz"
+    choice: "Document Rockchip RK3576 as the architectural SoC upgrade path"
+    reason: "The Rockchip RK3576 is the direct upgrade path when full-rate 2560x1600 @ 60/120 Hz dual-DSI bandwidth and higher NPU/CPU headroom are required."
+  - question: "Sharp LQ084R1SX01 dual-DSI FPC pinout modelling"
+    choice: "Model the 40-pin 0.5 mm display FPC connector (J1, FPC-0.5HF-40PWBH10) after the closest Sharp dual-DSI sibling (Sharp LQ101R1SX01) with separate WLED anode/cathode pins driven by mainboard TPS61165DRVR boost converter U6"
+    reason: "LQ084R1SX01 uses Sharp's standard 40-pin dual-channel MIPI-DSI (4 lanes Master DSI0 + 4 lanes Slave DSI1 + VDD_1V8 + VCC_3V3 + LCD_RST + LCD_EN + LED+/LED-) assignment."
+  - question: "PMIC LCSC live stock compliance (RK817-5 vs RK809-5)"
+    choice: "Specify Rockchip RK809-5 (LCSC C2939628, stock > 1100) on the shared QFN-68 7x7 mm RK817-5/RK809-5 footprint alongside TCS4525-compatible RK860-0 (LCSC C19188628) external VDD_CPU buck"
+    reason: "RK817-5 (C5179490) has only 5 units in live LCSC stock (<10 gate minimum), whereas RK809-5 (C2939628) shares the identical Rockchip RK817/RK809 datasheet, QFN-68 package, buck/LDO rails, fuel gauge, and Class-D audio codec with 1,188 units in stock."
+  - question: "Power path verification and current budget (2.4 W typical, 6.0 W peak)"
+    choice: "USB-C 5V/3A sink (R1=R2=6.8k 1% C25917 || 20k sense divider = 5.075k effective Rd, vSafe5V 4.75-5.50V passed and >6.54V typ [6.32V..6.75V] cut off by usbc_board U2 TPS259470ARPWR eFuse with 5.94V typ [5.77V min] auto-recovery, 2.43A typ [2.19A min..2.68A max] active OCP, and D3 ESTVS2200DRVR C42400188 22V standoff / 28.6V max flat-clamp surge TVS on VBUS_IN) -> BQ25895RTWR U11 1S NVDC charger (22V abs max / 14V operating VBUS input, D+/D- left open for safe 500 mA USB500 startup default until software reads 1:2 attenuated USB_CC1/USB_CC2 via R49/R50 + C73/C74 on SARADC_VIN2/3 and updates IINLIM over I2C0 capped <= 2.00 A [10.0 W max for the 2.4 W typ / 6.0 W peak tablet, backed up in hardware by R8=196 Ohm 1% C270631 on Pin 10 ILIM setting I_INMAX=1.81 A typ / 1.96 A max strictly below U2 I_OL(min) = 2.19 A, with local 1 uF 25V VBUS cap C159 C52923 at 1.04 mm from U11.1 and 7.5V standoff / 8.33V min breakdown / 12.9V max clamping surge TVS D13 SMF7.5A C123796 on VBUS at J6], regulating VSYS to >=3.5V when VBUS is present and connecting VBAT to VSYS via internal BATFET on battery alone) and 1S Li-Po (3.20-4.35V operating window with >=3.20V software/fuel-gauge low-battery cutoff threshold so VSYS >= 3.06V stays strictly above U4.54 VCC9 3.0V UVLO under 6W / 2A peak load transients, 21.28 Wh, protected by F1 BSMD0603L-300 PTC fuse + Q1 PPM6N20V10 high-side P-MOSFET reverse-polarity switch + D3 TPTVS0571P surge TVS) -> PMIC bucks/LDOs (with U4.45 VCC_RTC supplied from the highest always-present rail via ultra-low-leakage Schottky OR diodes D41/D42 BAS70L,315 C456141 from VSYS and VCC3V3_SYS) + TPS63802DLAR U12 2A synchronous buck-boost (regulating 3.52V nominal [3.43V..3.62V worst-case] VCC3V3_SYS via R39=60.4k C25911 / R40=10k C25744 in Slot 1 on PMIC_EXT_EN and supplying both U4.30 VCC6 [with 1 uF C147, providing >=220mV nominal / >=126mV worst-case hardware dropout headroom for LDO5 VCCA3V3_PHY and LDO6 VCC3V3_PMU at their 3.30V OTP default during cold boot and USB Maskrom recovery, and 420-520mV headroom when reprogrammed to 3.00-3.10V] and U4.57 VCC8 across the full 3.20-4.35V operating battery range) + TLV62569A U13 0.6V VCC0V6_DDR (enabled on BUCK_0V6_EN via 1.8V SN74LV1T34DCKR buffer U17 gated by 1.10V VCC_DDR) + RK860-0 VDD_CPU + TPS61165DRVR WLED boost + AW3641EDNR flash boost"
+    reason: "BQ25895 VBUS is rated to 14V operating / 22V abs max and regulates VSYS <= 4.35V so every downstream regulator input (3.20-4.35V operating VSYS) is well within 5.5V abs max, while synchronous buck-boost U12 (TPS63802DLAR, V_IN=1.8-5.5V, R39=60.4k C25911 / R40=10k C25744 -> V_OUT=3.520V nominal [3.43V..3.62V], L10=0.47uH, C65=22uF) maintains 3.52V on VCC3V3_SYS/VCC_3V3 and U4 VCC6/VCC8 across the battery discharge range so LDO5/LDO6 have >=220mV nominal dropout headroom at their 3.30V OTP default during cold boot and USB Maskrom recovery while staying within 3.60-3.63V operating limits, ultra-low-leakage signal Schottky OR diodes D41/D42 (BAS70L,315 C456141) ensure U4.45 VCC_RTC is powered from max(VSYS, VCC3V3_SYS), and raising the low-battery cutoff threshold to >=3.20V keeps VSYS >= 3.06V above U4.54 VCC9 3.0V UVLO during 6W (2A) peak load transients. On usbc_board, D3 ESTVS2200DRVR (V_RWM=22V, V_BR=25.8V, V_CL=27.6V typ / 28.6V max < 28.8V U2 abs max) stands off 6.5V-20V DC overvoltages while U2 TPS259470ARPWR (R6=34.8k, R7=5.62k, R8=9.09k, R9=1.37k) passes the full 4.75-5.50V vSafe5V window, recovers automatically above 5.50V (5.77V min falling) after transients, provides I_OL(min)=2.19A above the <=2.00A charger IINLIM ceiling, and caps fault current at 2.68A max below the 3.0A 6-pin J2 contact rating."
+  - question: "Firmware flashing and Maskrom recovery path"
+    choice: "Route RK3566 USB_OTG0_DP/DM directly via the 16-pin FPC (J6 -> usbc_board J2 -> USB-C receptacle J1) with no hub or mux in the path, and provide TP_MASKROM (connected to EMMC_CLK via 0 Ohm jumper R26 C17168 while 22 Ohm series damping resistor R25 C25092 at U1.A29 limits SoC driver current during Maskrom grounding) + UART2 debug test pads (TP_UART2_TX, TP_UART2_RX, TP_GND)"
+    reason: "RK3566 boots into Rockchip USB Maskrom download mode over USB_OTG0 when EMMC_CLK is shorted to GND on power-up; using 0 Ohm R26 ensures EMMC_CLK is pulled cleanly to 0V (< V_IL) while 22 Ohm series resistor R25 protects the U1.A29 push-pull output stage."
+  - question: "Datasheet review reconciliation (Batch 1, Batch 2, Batch 3, Batch 4, Batch 5 & Rev-2 Batch 1/2/3 BOM, power tree, and interface refinements)"
+    choice: "Scale VBAT (3.20-4.35V operating window, >=3.20V low-battery cutoff) into U4.56 (BATDIV) via 300k/100k 1% divider R47 (C25774) / R48 (C25741) + 100nF C72 (C1525) on PMIC_BATDIV (0.80-1.0875V <= 1.20V ADC full scale and 1.98V abs max); supply U4.45 (VCC_RTC, decoupled by 1uF C55) from the highest always-present rail via ultra-low-leakage signal Schottky OR diodes D41 (BAS70L,315 C456141 from VSYS) and D42 (BAS70L,315 C456141 from VCC3V3_SYS) and raise the low-battery cutoff threshold to >=3.20V so VSYS remains >=3.06V above U4.54 (VCC9) 3.0V UVLO under 6W (2A) peak load transients; replace undersized battery crowbar diode D4 with high-side -20V -10A 15 mOhm P-channel MOSFET reverse-polarity protection switch Q1 (PPM6N20V10 LCSC C918800, Drain on VBAT_PROT from F1.2, Source on VBAT, Gate VBAT_RPP_G pulled to VBAT Source via 1 MOhm R66 C26083 so Q1 stays OFF with V_GS=0V during reverse polarity V(VBAT_PROT) < V(GND) even when VBAT is energized, and pulled to GND via 20V SOT-723 N-channel MOSFET Q2 RUM002N02T2L LCSC C250130 gated on VBAT_RPP_EN from VBAT_PROT via 100k R70 C25741 and 1 MOhm pull-down R71 C26083 to GND [8.02 uA total quiescent drain at 4.2V < 10 uA in ship mode] with reverse-battery gate-clamp Schottky diode D49 BAS70L,315 C456141 from GND to VBAT_RPP_EN plus a charger-present 0V PCM battery wake path from U11.22 CHG_REGN via ultra-low-leakage Schottky diode D43 BAS70L,315 C456141 on VBAT_WAKE and 100k R72 C25741 to VBAT_PROT so Q2/Q1 turn fully ON across 2.0-4.35V and wake 0V PCM-tripped packs without premature BQ25895 termination); replace step-down buck U12 with 2A synchronous buck-boost converter TPS63802DLAR (LCSC C2845237, enabled in Slot 1 prior to Slot 2 via U12.1 EN on PMIC_EXT_EN from U4.60 with 100k pull-down R69 C25741 to GND, R39=60.4k 0402WGF6042TCE C25911 / R40=10k C25744 -> V_OUT=3.520V nominal [3.43V..3.62V worst-case], L10=0.47uH WPN201610HR47MT C97009, C65=22uF CL10A226MQ8NRNC C59461) supplying 3.52V VCC3V3_SYS to both U4.30 (VCC6, decoupled by 1 uF C147 C52923, providing >=220mV nominal [>=126mV worst-case] hardware dropout headroom for LDO5 VCCA3V3_PHY and LDO6 VCC3V3_PMU at their 3.30V OTP default during cold boot and USB Maskrom recovery) and U4.57 (VCC8) across the full 3.20-4.35V battery range while 500 mA 1% ultra-low-dropout linear regulators U21 and U15 (TLV75533PDRVR LCSC C2861750) regulate gated VCC_3V3 (1 uF C151) and VCC3V3_LCD (1 uF C38) down to 3.30V +/- 1% (<= 3.465V Sharp LQ084R1SX01 limit), U13 (TLV62569ADRLR C398367) Pin 5 (EN) is driven at 1.80V on BUCK_0V6_EN (with 100k pull-down R73 C25741) via SN74LV1T34DCKR level-shifter U17 (LCSC C78541, powered from VCC_1V8 with 100nF C144 C1525 and gated by Slot-3 1.10V VCC_DDR), U5 (RTL8723DS-CG) 3.3V VD33D shutdown inputs Pin 4 (WIFI_WL_DIS_L) and Pin 43 (BT_DIS_L) are driven at 3.30V via SN74LV1T34DCKR level-shifters U18 and U19 (LCSC C78541, powered from VCC_3V3 with 100nF C145/C146 C1525 and 100k pull-downs R74..R77 C25741) from 1.8V WIFI_REG_ON and BT_REG_ON, VBUS_DET divider is set to R34=47k (C25792) / R35=30k (C25776, ratio 0.3896 -> 1.95V at 5.0V VBUS and 2.63V at 6.75V max eFuse OVP trip <= 3.30V), and 34 power-rail test pads TP5..TP38 are instantiated alongside TP1..TP4; Kelvin-connect U4.62 (SNSP) to battery negative return BAT_SNSP at R13.1/J5.3/J5.4 and U4.63 (SNSN) via 0 Ohm R67 (C17168 on BAT_SNSN) to R13.2/GND; route VBUS, VBAT_CONN, VBAT_PROT, BAT_SNSP, VDD_CPU, VDD_LOGIC, VDD_GPU, PMIC_VBUCK4, and VCC0V6_DDR using wide copper pours and L4/In3.Cu/In1.Cu/In2.Cu/F.Cu/B.Cu plane polygons with parallel via arrays, and connect buck switching nodes CHG_SW, CPU_SW, and PMIC_SW1..SW5 with wide F.Cu copper shapes and widened multi-layer traces; wire U9 (MPR121QR2) VDD/VREG (C35) and pull-ups R15, R16, R5, R38 to always-on VCC_1V8 and isolate J2 COF touchscreen lines (TP_I2C1_SCL, TP_I2C1_SDA, TP_COF_INT_L with local pull-ups R62/R63 4.7k and R64 10k to VCC1V8_LCD and connector-side ESD diodes D19..D21 PESD5V0F1BL,315 C45961 adjacent to J2.2/3/4 ahead of U16) via U16 (TMUX1112RSVR LCSC C1849384, gated by LCD_PWR_EN, decoupled by 100nF C139) plus 1k series isolation resistor R65 on TP_ELE0 -> MPR121_ELE0; drive top speaker J7 from U4.39 (HPL_OUT Left headphone DAC on AUD_LINE_L) via a second external Class-D amplifier U23 (NS4150B LCSC C189961, with 100nF C161 + 30k R86 C25776 into U23.3 INP, 100nF C162 + 30k R87 C25776 AC-grounding U23.4 INN, 1uF bypass cap C160 C52923, 100k pull-down R88 C25741 on SPK_AMP_EN, and 10uF C163 + 100nF C164 on VSYS) and bottom speaker J9 from U4.41 (HPR_OUT Right headphone DAC on AUD_LINE_N) via U10 (NS4150B, with 100nF C44 + 30k R21 C25776 into U10.3 INP, 100nF C45 + 30k R22 C25776 AC-grounding U10.4 INN, and 10uF C168 + 100nF C169 on VSYS, setting matched A_VD = 8.0 V/V [18.1 dB] and leaving mono U4.32/34 SPKP_OUT/SPKN_OUT unconnected); route front camera J4 (OV5648-FF-24P) on dedicated I2C4_SCL/I2C4_SDA (U1.AE2/AF2) with 2.2k pull-ups R84/R85 (C25879) to VCC1V8_CAM and ESD diodes D47/D48 (PESD5V0F1BL,315 C45961) to eliminate 0x36 address collision with rear camera J3 (OV8858-AF-30P) on I2C2; add local VSYS input decoupling C163..C182 across U4, U6/L7, U7, U8, U10, U11, U12, U13, U20, and U23 (including 10 uF C167 C19702 + 100 nF C176 C1525 at U7.1 VIN), replace rear flash LED D1 with 1.0A OSRAM KW CELNM3.TK-S4S9-4L07M0-2686 (LCSC C17383700 on lcsc:LED-SMD_3P-L1.9-W1.5_KW-CELMM1.TG with thermal pad Pin 3 tied to GND via thermal via) driven at 531 mA Flash / 214 mA Torch by U7 (AW3641EDNR) via R23=110k 1% (0402WGF1103TCE C25745 on Pin 6 RSET), R24=0.22 Ohm 1% (0402WGF220LTCE C270628 low-side sense resistor on Pin 7 FB / D1.2 FLASH_LED_K to GND), and C49=4.7 uF 25V (GRM155R61E475ME15D C2858031 on Pin 10 VOUT), and set I2C0 pull-ups R2/R3 to 2.2 kOhm 1% (0402WGF2201TCE C25879); use 15pF load caps C20..C25 (C1548) on Y1/Y2/Y3; leave U11.2/3 (D+/D-) unconnected for safe 500 mA USB500 startup default, set U11.10 ILIM resistor R8 to 196 Ohm 1% (0402WGF1960TCE C270631, I_INMAX=1.81A typ / 1.96A max < 2.19A min usbc_board:U2 OCP) with dedicated 1 uF 25V local VBUS input capacitor C159 (CL05A105KA5NQNC C52923) at (14.55, 96.27) mm within 1.04 mm of U11.1, replace mainboard VBUS surge TVS D13 with 7.5V standoff / 8.33-9.21V breakdown / 12.9V max clamping SMF7.5A (C123796), wire U5.20 to WIFI_HOST_WAKE, U5.19 to BT_HOST_WAKE (with 10 kOhm pull-down R82 C25744 to GND for TEST_MOD_SEL=0), U5.18 to BT_WAKE_DEV (with 10 kOhm pull-down R83 C25744 to GND), and U5.44 (GPIO8/UART_RTS) to BT_UART_RTS, and add 10k shunt resistors R49/R50 (C25744) + powered-off-protected CMOS switch U22 (TMUX1511RSVR LCSC C2673275, isolating USB_CC1/USB_CC2 up to 3.6V rec / 6.0V abs max when VCC_1V8=0V, with 100nF C152 C1525 and 100k pull-down R81 C25741) + 1nF caps C73/C74 (C1523) on USB_CC1_ADC/USB_CC2_ADC at U1.1B18/1A19; add 10k pull-up R51 (C25744) on EMMC_D0 to VCC_1V8, upgrade C18 to 2.2uF (CL05A225MQ5NSNC C107369) + 100nF C75 (C1525) on EMMC_VDDI within 1.3 mm of U3.C2, add 10k pull-up R52 (C25744) on U1.AF38 (FLASH_VOL_SEL) to VCC3V3_PMU, set R25 to 22 Ohm (C25092) on EMMC_CLK_SOC -> EMMC_CLK, and set R26 to 0 Ohm (C17168) to TP3 (TP_MASKROM); upgrade PMIC BUCK1/2/3/4/5 and U8 VDD_CPU output capacitance and add 100 Ohm || 1 uF remote-sense feedback networks R53..R56 / C76..C79 on PMIC_FB1, PMIC_FB2, PMIC_FB4, and VDD_CPU_FB; enforce RK809-5 OTP startup sequencing, connect U4.5 LDO8 (VCCA1V8_IMAGE, C127/C142/C143) to U1 1.8V video PHY rails and ferrite-filtered VCCA1V8_PMU (L17 + C140/C141) to U1 1.8V PLL/ADC/USB/MULTI_PHY rails, gate display/touch rails VCC1V8_LCD via U14 (TPS22919DCKR C2149796) and 3.30V VCC3V3_LCD via 500 mA LDO U15 (TLV75533PDRVR C2861750) controlled by LCD_PWR_EN (R57), dedicate U5.22 (WIFI_SPS_LDO_SEL) to 10k pull-down R42 (C25744) with unused U22 channels 2/4 grounded and CLK_32K routed solely to U1.1T20, instantiate 36V bidirectional TVS D14 (H36VND3B C20615816, V_RWM=36V, V_BR=45V) on WLED_A at J1.40 and place 1uF 50V boost output cap C19 at (13.6, 65.4) mm adjacent to D2.1 and U6.3 GND, add 100k pull-down R68 on LCD_BL_PWM, isolate J1.40 WLED_A from J1.38 WLED_K with spacer pin J1.39 NC, and protect J1..J9 and TP1/TP2"
+    reason: "Reconciles every component value, package rating, startup sequence, output stability capacitance, and connector protection circuit on both main and usbc_board with the RK3566, K4FBE3D4HM, FEMDNN064G, RK809-5, TPS63802, TLV62569A, TPS22919, TMUX1511, TMUX1112, PPM6N20V10, RUM002N02T2L, BQ25895, RK860-0, RTL8723DS, TPS61165, AW3641E, MPR121, NS4150B, TPS259470A, USBLC6-2P6, BAS70L, PMEG3005EL, PTVS5V5D1BL, PESD5V0F1BL, TPTVS0571P, SMF7.5A, BSMD0603L, and ERJPA3 datasheets."

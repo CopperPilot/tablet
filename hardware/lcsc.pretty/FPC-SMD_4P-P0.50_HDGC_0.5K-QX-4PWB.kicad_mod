@@ -1,0 +1,177 @@
+(module
+  easyeda2kicad:FPC-SMD_4P-P0.50_HDGC_0.5K-QX-4PWB
+  (layer
+  F.Cu)
+
+  (tedit
+  5DC5F6A4)
+
+  (attr
+  smd)
+
+  (fp_text
+  reference
+  REF**
+  (at 0.000 -5.405)
+  (layer F.SilkS)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  value
+  FPC-SMD_4P-P0.50_HDGC_0.5K-QX-4PWB
+  (at 0.000 5.405)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  user
+  %R
+  (at 0 0)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (property
+  "LCSC Part"
+  "C2919475")
+
+  (fp_line
+  (start 1.88 0.61)
+  (end 1.88 -0.89)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start 1.88 -0.89)
+  (end 1.03 -0.89)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start 1.88 2.63)
+  (end 1.88 2.17)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start 1.88 2.63)
+  (end -1.89 2.63)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start -1.89 0.62)
+  (end -1.89 -0.90)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start -1.89 -0.90)
+  (end -1.04 -0.90)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (fp_line
+  (start -1.89 2.63)
+  (end -1.89 2.19)
+  (layer F.SilkS)
+  (width 0.25))
+
+  (pad
+  6
+  smd
+  rect
+  (at -1.64 1.41 0.00)
+  (size 0.300 1.150)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  5
+  smd
+  rect
+  (at 1.64 1.39 0.00)
+  (size 0.300 1.150)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  4
+  smd
+  rect
+  (at 0.75 -1.41 0.00)
+  (size 0.300 0.650)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  3
+  smd
+  rect
+  (at 0.25 -1.41 0.00)
+  (size 0.300 0.650)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  2
+  smd
+  rect
+  (at -0.25 -1.41 0.00)
+  (size 0.300 0.650)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  1
+  smd
+  rect
+  (at -0.75 -1.41 0.00)
+  (size 0.300 0.650)
+  (layers F.Cu F.Paste F.Mask))
+
+  (fp_circle
+  (center -1.89 -1.46)
+  (end -1.86 -1.46)
+  (layer F.SilkS)
+  (width 0.06))
+
+  (fp_poly
+  (pts (xy -1.567891 -1.214526) (xy -1.350162 -1.595526) (xy -1.096162 -1.214526) (xy -1.567891 -1.214526))
+  (stroke (width 0) (type solid))
+  (fill solid)
+  (layer "F.SilkS"))
+
+  (model
+  "${KIPRJMOD}/lcsc.3dshapes/FPC-SMD_4P-P0.50_HDGC_0.5K-QX-4PWB.step"
+  (offset (xyz 0.000 0.000 0.000))
+  (scale (xyz 1 1 1))
+  (rotate (xyz 0 0 0)))
+
+  (fp_line
+  (start -1.89 -1.835)
+  (end 1.89 -1.835)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "2de3f603-2516-5fdc-ae30-568a83702999"))
+
+  (fp_line
+  (start 1.89 -1.835)
+  (end 1.89 2.085)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "5a854bf5-989a-5061-ade8-4d8e20a81e00"))
+
+  (fp_line
+  (start 1.89 2.085)
+  (end -1.89 2.085)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "e05440f3-b218-5651-b38a-02f245136fb8"))
+
+  (fp_line
+  (start -1.89 2.085)
+  (end -1.89 -1.835)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "f880e489-6b42-5ff8-996c-0a23df9321bb"))
+	(zone (net 0) (net_name "") (layers "F.Cu") (name "MATING") (hatch edge 0.5)
+		(connect_pads (clearance 0)) (min_thickness 0.25) (filled_areas_thickness no)
+		(keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour allowed) (footprints not_allowed))
+		(fill (thermal_gap 0.5) (thermal_bridge_width 0.5))
+		(polygon (pts (xy 2.44 2.01) (xy -2.44 2.01) (xy -2.44 8.01) (xy 2.44 8.01))))
+)

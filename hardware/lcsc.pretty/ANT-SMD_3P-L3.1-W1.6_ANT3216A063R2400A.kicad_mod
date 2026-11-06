@@ -1,0 +1,184 @@
+(module
+  easyeda2kicad:ANT-SMD_3P-L3.1-W1.6_ANT3216A063R2400A
+  (layer
+  F.Cu)
+
+  (tedit
+  5DC5F6A4)
+
+  (attr
+  smd)
+
+  (fp_text
+  reference
+  REF**
+  (at 0.000 -4.475)
+  (layer F.SilkS)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  value
+  ANT-SMD_3P-L3.1-W1.6_ANT3216A063R2400A
+  (at 0.000 4.475)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  user
+  %R
+  (at 0 0)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (property
+  "LCSC Part"
+  "C412135")
+
+  (fp_line
+  (start 1.52 0.97)
+  (end 1.52 1.02)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (fp_line
+  (start 1.52 1.02)
+  (end -1.52 1.02)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (fp_line
+  (start -1.52 -0.97)
+  (end -1.52 -1.02)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (fp_line
+  (start -1.52 -1.02)
+  (end 1.52 -1.02)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (fp_line
+  (start 1.52 -1.02)
+  (end 1.52 -0.97)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (fp_line
+  (start -1.52 1.02)
+  (end -1.52 0.97)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (pad
+  1
+  smd
+  rect
+  (at 1.70 -0.47 0.00)
+  (size 1.000 0.650)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  3
+  smd
+  rect
+  (at -1.70 0.00 0.00)
+  (size 1.000 1.600)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  2
+  smd
+  rect
+  (at 1.70 0.47 0.00)
+  (size 1.000 0.650)
+  (layers F.Cu F.Paste F.Mask))
+
+  (fp_circle
+  (center 1.55 -0.80)
+  (end 1.58 -0.80)
+  (layer F.SilkS)
+  (width 0.06))
+
+  (fp_circle
+  (center 1.90 -1.27)
+  (end 2.08 -1.27)
+  (layer F.SilkS)
+  (width 0.12))
+
+  (fp_circle
+  (center 0.80 0.00)
+  (end 0.95 0.00)
+  (layer F.SilkS)
+  (width 0.30))
+
+  (fp_circle
+  (center 1.90 -0.51)
+  (end 2.06 -0.51)
+  (layer Cmts.User)
+  (width 0.30))
+
+  (fp_circle
+  (center 0.80 0.00)
+  (end 0.95 0.00)
+  (layer Cmts.User)
+  (width 0.30))
+
+  (fp_poly
+  (pts (xy -0.299999 -0.499999) (xy -0.299999 0.499999) (xy -0.499999 0.499999) (xy -0.499999 -0.499999) (xy -0.299999 -0.499999))
+  (stroke (width 0) (type solid))
+  (fill solid)
+  (layer "F.SilkS"))
+
+  (fp_poly
+  (pts (xy -0.299999 -0.100000) (xy 0.299999 -0.100000) (xy 0.299999 0.100000) (xy -0.299999 0.100000) (xy -0.299999 -0.100000))
+  (stroke (width 0) (type solid))
+  (fill solid)
+  (layer "F.SilkS"))
+
+  (fp_poly
+  (pts (xy 0.299999 0.499999) (xy -0.299999 0.499999) (xy -0.299999 0.299999) (xy 0.299999 0.299999) (xy 0.299999 0.499999))
+  (stroke (width 0) (type solid))
+  (fill solid)
+  (layer "F.SilkS"))
+
+  (fp_poly
+  (pts (xy -0.299999 -0.499999) (xy 0.299999 -0.499999) (xy 0.299999 -0.299999) (xy -0.299999 -0.299999) (xy -0.299999 -0.499999))
+  (stroke (width 0) (type solid))
+  (fill solid)
+  (layer "F.SilkS"))
+
+  (model
+  "${KIPRJMOD}/lcsc.3dshapes/ANT-SMD_3P-L3.1-W1.6_ANT3216A063R2400A.step"
+  (offset (xyz 0.000 0.000 0.000))
+  (scale (xyz 1 1 1))
+  (rotate (xyz 0 0 0)))
+
+  (fp_line
+  (start -2.3 -0.9)
+  (end 2.3 -0.9)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "7bb0d646-4b03-5385-8403-f574770d3a50"))
+
+  (fp_line
+  (start 2.3 -0.9)
+  (end 2.3 0.9)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "4d96c9dd-d142-57f7-a915-423842459815"))
+
+  (fp_line
+  (start 2.3 0.9)
+  (end -2.3 0.9)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "bbcfa520-b313-5292-ac2a-c766591e40b1"))
+
+  (fp_line
+  (start -2.3 0.9)
+  (end -2.3 -0.9)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "c53fd8f9-2394-57f4-8f57-537517a85228"))
+)

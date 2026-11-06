@@ -1,0 +1,158 @@
+(module
+  easyeda2kicad:MIC-SMD_5P-L2.8-W1.9_MSM261DCB002
+  (layer
+  F.Cu)
+
+  (tedit
+  5DC5F6A4)
+
+  (attr
+  smd)
+
+  (fp_text
+  reference
+  REF**
+  (at 0.000 -5.100)
+  (layer F.SilkS)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  value
+  MIC-SMD_5P-L2.8-W1.9_MSM261DCB002
+  (at 0.000 5.100)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  user
+  %R
+  (at 0 0)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (property
+  "LCSC Part"
+  "C51928216")
+
+  (fp_line
+  (start 1.00 1.39)
+  (end 1.00 -1.45)
+  (layer F.SilkS)
+  (width 0.15))
+
+  (fp_line
+  (start -0.99 1.39)
+  (end 1.00 1.39)
+  (layer F.SilkS)
+  (width 0.15))
+
+  (fp_line
+  (start -1.00 -1.45)
+  (end -0.99 1.39)
+  (layer F.SilkS)
+  (width 0.15))
+
+  (fp_line
+  (start -1.00 -1.45)
+  (end 1.00 -1.45)
+  (layer F.SilkS)
+  (width 0.15))
+
+  (pad
+  "3"
+  smd
+  rect
+  (at 0.0 0.75 0.0)
+  (size 1.0 0.55)
+  (layers "F.Cu" "F.Paste" "F.Mask"))
+
+  (pad
+  4
+  smd
+  rect
+  (at -0.53 -0.45 0.00)
+  (size 0.550 0.350)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  5
+  smd
+  rect
+  (at -0.53 -1.10 0.00)
+  (size 0.550 0.350)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  1
+  smd
+  rect
+  (at 0.53 -1.10 0.00)
+  (size 0.550 0.350)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  2
+  smd
+  rect
+  (at 0.53 -0.45 0.00)
+  (size 0.550 0.350)
+  (layers F.Cu F.Paste F.Mask))
+
+  (fp_circle
+  (center 0.93 -1.40)
+  (end 0.96 -1.40)
+  (layer F.SilkS)
+  (width 0.06))
+
+  (fp_circle
+  (center 0.00 0.58)
+  (end 0.06 0.58)
+  (layer Cmts.User)
+  (width 0.12))
+
+  (fp_circle
+  (center 1.31 -1.09)
+  (end 1.41 -1.09)
+  (layer Cmts.User)
+  (width 0.20))
+
+  (fp_circle
+  (center 1.32 -1.08)
+  (end 1.42 -1.08)
+  (layer F.SilkS)
+  (width 0.20))
+
+  (model
+  "${KIPRJMOD}/lcsc.3dshapes/MIC-SMD_5P-L2.8-W1.9_MSM261DCB002.step"
+  (offset (xyz 0.000 0.000 0.000))
+  (scale (xyz 1 1 1))
+  (rotate (xyz 0 0 0)))
+
+  (fp_line
+  (start -0.905 -1.375)
+  (end 0.905 -1.375)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "23cb090b-0107-5aba-8c34-6b2cfaf39404"))
+
+  (fp_line
+  (start 0.905 -1.375)
+  (end 0.905 1.203)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "4836f4cc-a7c8-5ee3-9d48-bb82bd7fb526"))
+
+  (fp_line
+  (start 0.905 1.203)
+  (end -0.905 1.203)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "88851de8-bb71-5363-a8d1-e8ca8714bf94"))
+
+  (fp_line
+  (start -0.905 1.203)
+  (end -0.905 -1.375)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "1b9c3e8e-b1a9-5987-87f4-d65b081bdb99"))
+)

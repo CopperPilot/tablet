@@ -1,0 +1,124 @@
+(module
+  easyeda2kicad:CONN-SMD_3P-L4.4-W0.8_C9900042675
+  (layer
+  F.Cu)
+
+  (tedit
+  5DC5F6A4)
+
+  (attr
+  smd)
+
+  (fp_text
+  reference
+  REF**
+  (at 0.000 -4.000)
+  (layer F.SilkS)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  value
+  CONN-SMD_3P-L4.4-W0.8_C9900042675
+  (at 0.000 4.000)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (fp_text
+  user
+  %R
+  (at 0 0)
+  (layer F.Fab)
+  (effects (font (size 1 1) (thickness 0.15))))
+
+  (property
+  "LCSC Part"
+  "C19631108")
+
+  (fp_line
+  (start -2.50 -0.58)
+  (end 2.50 -0.58)
+  (layer F.SilkS)
+  (width 0.20))
+
+  (fp_line
+  (start 2.50 -0.58)
+  (end 2.50 0.58)
+  (layer F.SilkS)
+  (width 0.20))
+
+  (fp_line
+  (start 2.50 0.58)
+  (end -2.50 0.58)
+  (layer F.SilkS)
+  (width 0.20))
+
+  (fp_line
+  (start -2.50 0.58)
+  (end -2.50 -0.58)
+  (layer F.SilkS)
+  (width 0.20))
+
+  (pad
+  1
+  smd
+  rect
+  (at -1.55 0.00 0.00)
+  (size 1.400 0.800)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  2
+  smd
+  rect
+  (at 0.00 0.00 0.00)
+  (size 1.250 0.800)
+  (layers F.Cu F.Paste F.Mask))
+
+  (pad
+  3
+  smd
+  rect
+  (at 1.55 0.00 0.00)
+  (size 1.400 0.800)
+  (layers F.Cu F.Paste F.Mask))
+
+  (fp_circle
+  (center -2.25 0.40)
+  (end -2.22 0.40)
+  (layer F.SilkS)
+  (width 0.06))
+
+  (model
+  "${KIPRJMOD}/lcsc.3dshapes/CONN-SMD_3P-L4.4-W0.8_C9900042675.step"
+  (offset (xyz 0.000 0.000 0.000))
+  (scale (xyz 1 1 1))
+  (rotate (xyz 0 0 0)))
+
+  (fp_line
+  (start -2.35 -0.5)
+  (end 2.35 -0.5)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "f9ca5e65-bed4-52ed-bd9e-45df363277a0"))
+
+  (fp_line
+  (start 2.35 -0.5)
+  (end 2.35 0.5)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "8ad32372-a3f6-5323-b03f-36dd790f6c21"))
+
+  (fp_line
+  (start 2.35 0.5)
+  (end -2.35 0.5)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "20445e1d-f102-513c-9863-b0fe30b4fcef"))
+
+  (fp_line
+  (start -2.35 0.5)
+  (end -2.35 -0.5)
+  (stroke (width 0.05) (type solid))
+  (layer "F.CrtYd")
+  (uuid "9b08bc02-214c-5c04-bab4-c8383651f96e"))
+)
