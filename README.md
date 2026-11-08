@@ -63,7 +63,7 @@ A 134 x 198 x 9.4 mm tablet with 14 mm corners and a flat CNC aluminium back:
 
 ## Build film
 
-[docs/build-film.mp4](docs/build-film.mp4) (48 s, 720p). Every part moves in the assembly order and along the insertion path that the collision gates checked, and every cable is drawn along its real route.
+[docs/build-film.mp4](docs/build-film.mp4) (48 s, 720p). Every part backs out along the direction it was fitted and goes back in assembly order, and every cable is drawn along its real route. Every frame is replayed against the 3D models (no part passes through another, the camera stays outside, the product stays in frame and faces you, no flicker), and a separate critic watches the film ([notes](reviews/film.md)).
 
 ## Renders
 
@@ -105,7 +105,7 @@ the top and bottom speakers; MEMS microphone; button flex for power and volume.
 
 CopperPilot's agents worked from the prompt in [reference/prompt.md](reference/prompt.md) and 3 reference photos ([reference/](reference)). The pipeline scopes the product into a written contract ([design/spec.yaml](design/spec.yaml)), designs the boards and the enclosure in parallel, integrates them, and only moves on when the gates pass. A separate review agent reads every board against the part datasheets, and a separate judge compares the result with the photos.
 
-- Pipeline wall clock: about **89 h** over 11 launches (pipeline v71 to v119).
+- Pipeline wall clock: about **89 h** over 14 launches (pipeline v71 to v123).
 
 **Reference vs build:**
 
