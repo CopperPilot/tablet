@@ -105,7 +105,7 @@ the top and bottom speakers; MEMS microphone; button flex for power and volume.
 
 CopperPilot's agents worked from the prompt in [reference/prompt.md](reference/prompt.md) and 3 reference photos ([reference/](reference)). The pipeline scopes the product into a written contract ([design/spec.yaml](design/spec.yaml)), designs the boards and the enclosure in parallel, integrates them, and only moves on when the gates pass. A separate review agent reads every board against the part datasheets, and a separate judge compares the result with the photos.
 
-- Pipeline wall clock: about **89 h** over 14 launches (pipeline v71 to v123).
+- Pipeline wall clock: about **89 h** over 16 launches (pipeline v71 to v127).
 
 **Reference vs build:**
 
